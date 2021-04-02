@@ -1,0 +1,32 @@
+<form class="form-inline md-form col-md-4">
+  <mdb-icon fas icon="search" aria-hidden="true"></mdb-icon>
+  <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search" aria-label="Search" name="listFilter" mdbInput [(ngModel)]='listFilter'>
+</form>
+
+<table class="table table-striped table-responsive-md btn-table">
+    <thead class="teal text-white">
+      <tr>
+        <th>Room name</th>
+        <th>Player 1</th>
+        <th>Player 2</th>
+        <th>Player 3</th>
+        <th>Player 4</th>
+        <th>Player 5</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor='let game of filteredGames'>
+            <th scope="row">{{game.RoomName}}</th>
+            <td>{{game.Player1}}</td>
+            <td>{{game.Player2}}</td>
+            <td>{{game.Player3}}</td>
+            <td>{{game.Player4}}</td>
+            <td>{{game.Player5}}</td>
+            <td>
+              <button mdbBtn color="teal" size="sm" mdbWavesEffect type="button" class="m-0">Join game</button>
+            </td>
+        </tr>
+    </tbody>
+  </table>

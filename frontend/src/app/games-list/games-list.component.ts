@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { GameService } from '../game.service';
 import { IGame } from './game';
 
 @Component({
@@ -6,11 +8,19 @@ import { IGame } from './game';
   templateUrl: './games-list.component.html',
   styleUrls: ['./games-list.component.scss']
 })
-export class GamesListComponent implements OnInit {
+export class GamesListComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  constructor(private gameService: GameService) { }
 
   ngOnInit(): void {
+    this.subscription = this.gameService.getGames().subscribe({
+      next: games => this.games = games,
+      error: err => this.errorMessage = err 
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private _listFilter: string = '';
@@ -23,43 +33,7 @@ export class GamesListComponent implements OnInit {
       game.Player1.toLocaleLowerCase().includes(this.listFilter.toLocaleLowerCase()) )
   }
 
-  games : IGame[] = [
-    {
-      "GameId": 1,
-      "RoomName": "Test1",
-      "Player1": "Asdfg",
-      "Player2": "",
-      "Player3": "",
-      "Player4": "",
-      "Player5": "",
-    },
-    {
-      "GameId": 2,
-      "RoomName": "Test2",
-      "Player1": "Asdfg",
-      "Player2": "",
-      "Player3": "",
-      "Player4": "",
-      "Player5": "",
-    },
-    {
-      "GameId": 3,
-      "RoomName": "Test3",
-      "Player1": "Asdfg",
-      "Player2": "",
-      "Player3": "",
-      "Player4": "",
-      "Player5": "",
-    },
-    {
-      "GameId": 4,
-      "RoomName": "Test4",
-      "Player1": "Asdfg",
-      "Player2": "",
-      "Player3": "",
-      "Player4": "",
-      "Player5": "",
-    }
-  ]
-
+  games : IGame[] = [];
+  errorMessage: string = '';
+  subscription!: Subscription;
 }

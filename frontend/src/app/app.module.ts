@@ -6,6 +6,7 @@ import { IconsModule } from 'angular-bootstrap-md'
 
 import { AppComponent } from './app.component';
 import { GamesListComponent } from './games-list/games-list.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { GamesListComponent } from './games-list/games-list.component';
     BrowserModule,
     FormsModule,
     IconsModule,
+    HttpClientModule,
     MDBBootstrapModule.forRoot()
   ],
   providers: [],

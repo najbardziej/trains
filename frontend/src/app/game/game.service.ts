@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { IGame } from './games-list/game';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { IGame } from './game';
 
 @Injectable({
   providedIn: 'root'

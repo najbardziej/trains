@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { IGame } from '../game';
 import { GameService } from '../game.service';
-import { IGame } from './game';
 
 @Component({
-  selector: 'trains-games-list',
   templateUrl: './games-list.component.html',
   styleUrls: ['./games-list.component.scss']
 })

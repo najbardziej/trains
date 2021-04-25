@@ -1,7 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNumber, IsOptional } from 'class-validator';
 
-export class Game {
-  @IsNumber() @IsOptional()
+export class GameDto {
+  @IsNumber() @IsOptional() @ApiProperty()
   readonly id: number;
 
   @IsString()

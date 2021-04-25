@@ -13,10 +13,7 @@ async function bootstrap() {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Trains api')
     .setVersion('0.1')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'access-token',
-    )
+    .addBearerAuth()
     .build();
 
   SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, swaggerConfig));

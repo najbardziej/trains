@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt';
@@ -16,7 +16,7 @@ export class AuthService {
       const { password, ...result } = user;
       return result;
     }
-    return null;
+    throw new UnauthorizedException();
   }
 
   async register(userData:any): Promise<any> {

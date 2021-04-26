@@ -10,7 +10,7 @@ import { JwtStrategy } from './jwt.strategy';
   providers: [AuthService, LocalStrategy, JwtStrategy],
   imports: [UsersModule, PassportModule, JwtModule.registerAsync({
     useFactory: async () => ({
-      secretOrPrivateKey: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.EXPIRES_IN }
     })
   })],

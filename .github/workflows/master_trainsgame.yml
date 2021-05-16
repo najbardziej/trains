@@ -32,8 +32,8 @@ jobs:
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
-        name: backend@0.0.1.tgz
-        path: ./backend/
+        name: backend
+        path: ./backend/backend@0.0.1.tgz
 
   deploy:
     runs-on: ubuntu-latest

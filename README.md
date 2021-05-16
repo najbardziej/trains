@@ -1,4 +1,4 @@
 ## ZTPAI
 
 Backend deployed to:
-http://trainsgame.azurewebsites.net/api/
+http://trainsgame.azurewebsites.net/

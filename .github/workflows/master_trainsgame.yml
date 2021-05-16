@@ -52,7 +52,7 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'backend'
+        app-name: 'trainsgame'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_789845f218024b72bfc1ff6efae8118b }}
-        package: .
+        package: backend-0.0.1.tgz

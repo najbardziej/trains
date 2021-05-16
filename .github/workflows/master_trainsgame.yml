@@ -34,7 +34,7 @@ jobs:
         name: backend
         path: |
           ./backend/dist/
-          package.json
+          ./backend/package.json
 
   deploy:
     runs-on: ubuntu-latest

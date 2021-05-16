@@ -27,11 +27,12 @@ jobs:
         npm install
         npm run build --if-present
         npm run test --if-present
+        npm pack
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
-        name: backend
+        name: backend@0.0.1.tgz
         path: ./backend/
 
   deploy:

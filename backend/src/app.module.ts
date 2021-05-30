@@ -12,7 +12,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     UsersModule,
     MongooseModule.forRootAsync({
       useFactory: async () => ({
-        uri: process.env.CONNECTION_STRING
+        uri: process.env.CONNECTION_STRING,
+        useCreateIndex: true,
       })
     })
   ],

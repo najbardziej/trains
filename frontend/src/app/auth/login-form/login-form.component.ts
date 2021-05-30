@@ -43,14 +43,15 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      usernameOrEmail: ['', [Validators.required, Validators.minLength(3)]],
-      password:        ['', [Validators.required, Validators.minLength(8)]],
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
     this.registerForm = this.formBuilder.group({
       username:        ['', [Validators.required, Validators.minLength(3)]],
       email:           ['', [Validators.required, Validators.email]],
       password:        ['', [Validators.required, Validators.minLength(8)]],
       repeatPassword:  ['', [Validators.required, Validators.minLength(8)]],
+      agreeToTerms:    [false]
     }, {
       validator: MustMatch('password', 'repeatPassword')
     });
@@ -64,6 +65,10 @@ export class LoginFormComponent implements OnInit {
     }
     if (!form.valid) {
       return 'Please fix validation errors';
+    }
+    if (form == this.registerForm){
+      if (!this.registerForm.get('agreeToTerms')?.value)
+        return 'You have to agree to the terms';
     }
     return '';
   }
@@ -85,12 +90,14 @@ export class LoginFormComponent implements OnInit {
   }
 
   register(): void {
-    this.registerErrorMessage = this.checkFormCompletion(this.loginForm);
+    this.registerErrorMessage = this.checkFormCompletion(this.registerForm);
     if (this.registerErrorMessage) {
       return;
     }
+    
+    const {repeatPassword, agreeToTerms, ...user} = this.registerForm.value;
 
-    this.authService.register(this.registerForm.value)
+    this.authService.register(user)
       .subscribe({
         next: () => this.onComplete(),
         error: err => {

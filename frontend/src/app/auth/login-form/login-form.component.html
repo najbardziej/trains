@@ -30,7 +30,7 @@
                     <p class="text-center">or:</p>
 
                     <mdb-form-control class="form-outline mb-4">
-                      <input mdbInput [mdbValidate]="false" type="email" class="form-control" formControlName="usernameOrEmail" />
+                      <input mdbInput [mdbValidate]="false" type="email" class="form-control" formControlName="username" />
                       <label mdbLabel class="form-label">Username or email</label>
                     </mdb-form-control>
 
@@ -38,15 +38,10 @@
                       <input mdbInput [mdbValidate]="false" type="password" class="form-control" formControlName="password"/>
                       <label mdbLabel class="form-label">Password</label>
 
-
                       <mdb-error class="mb-4 d-flex justify-content-center">
-                        <div>
-                          {{ loginErrorMessage }}
-                        </div>
+                        {{ loginErrorMessage }}
                       </mdb-error>
                     </mdb-form-control>
-
-                    
 
                     <div class="mb-4 d-flex justify-content-center">
                         <a href="#!">Forgot password?</a>
@@ -96,10 +91,14 @@
                     <mdb-form-control class="form-outline mb-4">
                       <input mdbInput [mdbValidate]="false" type="password" class="form-control" formControlName="repeatPassword"/>
                       <label mdbLabel class="form-label">Repeat password</label>
+
+                      <mdb-error class="mb-4 d-flex justify-content-center">
+                        {{ registerErrorMessage }}
+                      </mdb-error>
                     </mdb-form-control>
 
                     <div class="form-check d-flex justify-content-center mb-4">
-                      <input mdbCheckbox class="form-check-input me-2" type="checkbox" id="registerCheck" />
+                      <input mdbCheckbox class="form-check-input me-2" type="checkbox" id="registerCheck" formControlName="agreeToTerms"/>
                       <label class="form-check-label" for="registerCheck">
                         I have read and agree to the terms
                       </label>

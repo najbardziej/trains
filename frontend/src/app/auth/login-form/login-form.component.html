@@ -7,7 +7,7 @@
             <div class="container">
               <mdb-tabs [pills]="true" [justified]="true">
                 <mdb-tab title="Login">
-                  <form [formGroup]="loginForm">
+                  <form [formGroup]="loginForm" (ngSubmit)="login()">
                     <div class="text-center mb-3">
                       <p>Sign in with:</p>
                       <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -30,16 +30,23 @@
                     <p class="text-center">or:</p>
 
                     <mdb-form-control class="form-outline mb-4">
-                      <input mdbInput [mdbValidate]="false" type="email" class="form-control" formControlName="email" />
-                      <label mdbLabel class="form-label">Email</label>
-                      <mdb-error></mdb-error>
+                      <input mdbInput [mdbValidate]="false" type="email" class="form-control" formControlName="usernameOrEmail" />
+                      <label mdbLabel class="form-label">Username or email</label>
                     </mdb-form-control>
 
                     <mdb-form-control class="form-outline mb-4">
                       <input mdbInput [mdbValidate]="false" type="password" class="form-control" formControlName="password"/>
                       <label mdbLabel class="form-label">Password</label>
-                      <mdb-error></mdb-error>
+
+
+                      <mdb-error class="mb-4 d-flex justify-content-center">
+                        <div>
+                          {{ loginErrorMessage }}
+                        </div>
+                      </mdb-error>
                     </mdb-form-control>
+
+                    
 
                     <div class="mb-4 d-flex justify-content-center">
                         <a href="#!">Forgot password?</a>
@@ -49,7 +56,7 @@
                   </form>
                 </mdb-tab>
                 <mdb-tab title="Register">
-                  <form [formGroup]="registerForm">
+                  <form [formGroup]="registerForm" (ngSubmit)="register()">
                     <div class="text-center mb-3">
                       <p>Sign up with:</p>
                       <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -72,21 +79,23 @@
                     <p class="text-center">or:</p>
 
                     <mdb-form-control class="form-outline mb-4">
+                      <input mdbInput [mdbValidate]="false" type="email" class="form-control" formControlName="username" />
+                      <label mdbLabel class="form-label">Username</label>
+                    </mdb-form-control>
+
+                    <mdb-form-control class="form-outline mb-4">
                       <input mdbInput [mdbValidate]="false" type="email" class="form-control" formControlName="email" />
                       <label mdbLabel class="form-label">Email</label>
-                      <mdb-error></mdb-error>
                     </mdb-form-control>
 
                     <mdb-form-control class="form-outline mb-4">
                       <input mdbInput [mdbValidate]="false" type="password" class="form-control" formControlName="password"/>
                       <label mdbLabel class="form-label">Password</label>
-                      <mdb-error></mdb-error>
                     </mdb-form-control>
 
                     <mdb-form-control class="form-outline mb-4">
                       <input mdbInput [mdbValidate]="false" type="password" class="form-control" formControlName="repeatPassword"/>
                       <label mdbLabel class="form-label">Repeat password</label>
-                      <mdb-error></mdb-error>
                     </mdb-form-control>
 
                     <div class="form-check d-flex justify-content-center mb-4">

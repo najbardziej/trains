@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GamesListComponent } from './games-list/games-list.component';
 import { FormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { MdbModule } from 'mdb-angular-ui-kit';
 
 
 
@@ -14,7 +14,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
   imports: [
     CommonModule,
     FormsModule,
-    MDBBootstrapModule.forRoot(),
+    MdbModule,
     RouterModule.forChild([
       {path: 'games', component: GamesListComponent}
     ])

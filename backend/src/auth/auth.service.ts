@@ -2,8 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt';
-import { UserLoginDto } from 'src/dto/userLogin.dto';
+import { UserDto } from 'src/dto/user.dto';
 import { UserRegisterDto } from 'src/dto/userRegister.dto';
+import { TokenDto } from 'src/dto/refreshToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,8 +25,10 @@ export class AuthService {
   async register(userRegisterDto: UserRegisterDto): Promise<any> {
     try {
       const result = await this.usersService.create(userRegisterDto);
+      const payload = {username: result.username}
       return {
-        accessToken: this.jwtService.sign({username: result.username}),
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: await this.generateRefreshToken(result.username)
       }
     } 
     catch {
@@ -33,11 +36,56 @@ export class AuthService {
     }
   }
 
-  async login(userLoginDto: UserLoginDto): Promise<any> {
-    const user = await (await this.usersService.findOne(userLoginDto.username));
-    const payload = { username: user.username};
-    return {
-      accessToken: this.jwtService.sign(payload),
+  async login(userDto: UserDto): Promise<any> {
+    try {
+      const user = await this.usersService.findOne(userDto.username);
+      const payload = { username: user.username };
+      return {
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: await this.generateRefreshToken(user.username)
+      }
     }
+    catch {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async refreshJwtToken(token: TokenDto): Promise<any> {
+    try {
+      const username = this.jwtService.decode(token.accessToken)['username'];
+      const user = await this.usersService.findOne(username);
+      const payload = { username: user.username }
+      return {
+        accessToken: this.jwtService.sign(payload),
+      }
+    }
+    catch {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async removeRefreshToken(token: TokenDto): Promise<void> {
+    if (!token.refreshToken)
+      throw new UnauthorizedException();
+
+    const username = this.jwtService.decode(token.accessToken)['username'];
+    const user = await this.usersService.findOne(username);
+
+    if (!user)
+      throw new UnauthorizedException();
+
+    this.usersService.setCurrentRefreshToken("", user.username);
+    return;
+  }
+
+  async generateRefreshToken(username: string): Promise<any> {
+    const payload = { username: username };
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_REFRESH_SECRET
+    });
+
+    this.usersService.setCurrentRefreshToken(token, username);
+
+    return token;
   }
 }

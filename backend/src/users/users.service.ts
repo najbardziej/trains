@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
+import { TokenDto } from 'src/dto/refreshToken.dto';
 import { UserRegisterDto } from 'src/dto/userRegister.dto';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
@@ -25,5 +26,16 @@ export class UsersService {
       email: userDto.email,
       password: hashedPassword
     })).save();
+  }
+
+  async setCurrentRefreshToken(token: string, username: string): Promise<any> {
+    const user = await this.userModel.findOne({ username: username });
+    if (token == "") {
+      user.refreshToken = ""
+    } else {
+      const salt = await bcrypt.genSalt(10);
+      user.refreshToken = await bcrypt.hash(token, salt);
+    }
+    return (new this.userModel(user)).save();
   }
 }

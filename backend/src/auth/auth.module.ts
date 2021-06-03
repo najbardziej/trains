@@ -6,9 +6,10 @@ import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
+import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 
 @Module({
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
   imports: [UsersModule, PassportModule, JwtModule.registerAsync({
     useFactory: async () => ({
       secret: process.env.JWT_SECRET,

@@ -6,9 +6,10 @@ import { MdbModule, MdbFormsModule, MdbTabsModule, MdbValidationModule } from 'm
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
+import { GoogleLoginComponent } from './google/google-login.component';
 
 @NgModule({
-  declarations: [LoginFormComponent],
+  declarations: [LoginFormComponent, GoogleLoginComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -18,6 +19,7 @@ import { AuthInterceptor } from './auth.interceptor';
     MdbValidationModule,
     RouterModule.forChild([
       {path: '', component: LoginFormComponent},
+      {path: 'auth/google/login', component: GoogleLoginComponent},
     ])
   ],
   providers: [

@@ -10,20 +10,20 @@
                   <form [formGroup]="loginForm" (ngSubmit)="login()">
                     <div class="text-center mb-3">
                       <p>Sign in with:</p>
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-facebook-f"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" disabled>
+                        <i class="fab fa-facebook-f fa-lg"></i>
                       </button>
 
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-google"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" (click)="googleLogin()">
+                        <i class="fab fa-google fa-lg"></i>
                       </button>
 
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-twitter"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" disabled>
+                        <i class="fab fa-discord fa-lg"></i>
                       </button>
 
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-github"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" disabled>
+                        <i class="fab fa-github fa-lg"></i>
                       </button>
                     </div>
 
@@ -54,20 +54,20 @@
                   <form [formGroup]="registerForm" (ngSubmit)="register()">
                     <div class="text-center mb-3">
                       <p>Sign up with:</p>
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-facebook-f"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" disabled>
+                        <i class="fab fa-facebook-f fa-lg"></i>
                       </button>
 
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-google"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" (click)="googleLogin()">
+                        <i class="fab fa-google fa-lg"></i>
                       </button>
 
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-twitter"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" disabled>
+                        <i class="fab fa-discord fa-lg"></i>
                       </button>
 
-                      <button type="button" class="btn btn-primary btn-floating mx-1">
-                        <i class="fab fa-github"></i>
+                      <button type="button" class="btn btn-primary btn-floating mx-1" disabled>
+                        <i class="fab fa-github fa-lg"></i>
                       </button>
                     </div>
 

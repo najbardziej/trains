@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Request, Res } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { UserDto } from 'src/dto/user.dto';
 import { UserRegisterDto } from 'src/dto/userRegister.dto';
@@ -7,6 +7,7 @@ import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { TokenDto } from 'src/dto/refreshToken.dto';
+import { GoogleAuthGuard } from './google-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -39,8 +40,21 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('profile')
-  getProfile(@Request() req) {
+  async getProfile(@Request() req) {
     return req.user;
   }
-  
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('google')
+  async googleAuth() {}
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('google/redirect')
+  async googleAuthRedirect(@Request() req, @Res() res) {
+    var token = await this.authService.googleLogin(req.user)
+
+    return res.redirect('http://localhost:4200/auth/google/login?' + 
+      'accessToken=' + token.accessToken + 
+      '&refreshToken=' + token.refreshToken);
+  }
 }

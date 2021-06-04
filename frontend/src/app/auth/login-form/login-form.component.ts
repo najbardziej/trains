@@ -114,4 +114,8 @@ export class LoginFormComponent implements OnInit {
     this.router.navigate(['/games']);
   }
 
+  googleLogin(): void {
+    window.location.href = 'http://localhost:7000/auth/google';
+  }
+
 }

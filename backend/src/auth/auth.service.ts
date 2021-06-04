@@ -15,6 +15,9 @@ export class AuthService {
 
   async validateUser(usernameOrEmail: string, pass: string): Promise<any> {
     let user = await this.usersService.findOne(usernameOrEmail);
+    if (pass = "") {
+      throw new UnauthorizedException("Use OAuth");
+    }
     if (user && await bcrypt.compare(pass, user.password)) {
       const { password, ...result } = user;
       return result;
@@ -48,6 +51,11 @@ export class AuthService {
     catch {
       throw new UnauthorizedException();
     }
+  }
+
+  async loginViaToken(token: TokenDto): Promise<any> {
+    const username = this.jwtService.decode(token.accessToken)['username'];
+    const user = await this.usersService.findOne(username);
   }
 
   async refreshJwtToken(token: TokenDto): Promise<any> {
@@ -87,5 +95,41 @@ export class AuthService {
     this.usersService.setCurrentRefreshToken(token, username);
 
     return token;
+  }
+
+  async googleLogin(request: any) : Promise<TokenDto>{
+
+    let user = await this.usersService.findOne(request.email);
+
+    if (user && user.password == '') {
+
+      const payload = {username: user.username}
+      user = await this.usersService.setCurrentRefreshToken(request.accessToken, user.username);
+  
+      return {
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: request.accessToken
+      }
+
+    } else if (!user) {
+
+      const newUser : UserRegisterDto = {
+        username: request.email,
+        email: request.email,
+        password: "",
+      }
+  
+      const result = await this.usersService.create(newUser);
+      const payload = {username: result.username}
+      user = await this.usersService.setCurrentRefreshToken(request.accessToken, request.email);
+  
+      return {
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: request.accessToken
+      }
+      
+    } else {
+      throw new UnauthorizedException("Not OAuth user!");
+    }
   }
 }

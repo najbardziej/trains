@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { Token } from '../../model/token';
 
 @Component({
   selector: 'trains-google-login',
@@ -11,14 +12,21 @@ import { AuthService } from '../auth.service';
 export class GoogleLoginComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit(): void {
-    // this.authService.googleLogin()
-    //   .subscribe({
-    //     next: (obj) => console.log(obj),
-    //     error: (err) => console.log(err)
-    //   })
+    const routeParams = this.route.snapshot.paramMap;
+    const token: Token = {
+      accessToken: routeParams.get('accessToken')!,
+      refreshToken: routeParams.get('refreshToken')!
+    }
+    this.authService.loginViaToken(token)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['games']);
+        }
+      })
+    this.router.navigate([''])
   }
-
 }

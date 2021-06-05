@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { User } from '../model/user';
+import { Token } from '../model/token';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,10 @@ export class AuthService {
 
   register(user: User) : Observable<any> {
     return this.httpClient.post(`${this.baseUrl}register`, user);
+  }
+
+  loginViaToken(token: Token) {
+    return this.httpClient.post(`${this.baseUrl}loginViaToken`, token);
   }
 
   refreshToken() {

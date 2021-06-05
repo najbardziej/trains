@@ -19,7 +19,7 @@ import { GoogleLoginComponent } from './google/google-login.component';
     MdbValidationModule,
     RouterModule.forChild([
       {path: '', component: LoginFormComponent},
-      {path: 'auth/google/login', component: GoogleLoginComponent},
+      {path: 'auth/google/login/:accessToken/:refreshToken', component: GoogleLoginComponent},
     ])
   ],
   providers: [

@@ -57,8 +57,7 @@ export class AuthService {
     try {
       const username = this.jwtService.decode(token.accessToken)['username'];
       const user = await this.usersService.findOne(username);
-      console.log(user);
-      console.log(token)
+      
       if (!await bcrypt.compare(token.refreshToken, user.refreshToken)) {
         throw new UnauthorizedException();
       }

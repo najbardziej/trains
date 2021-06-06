@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
 import { GoogleLoginComponent } from './google/google-login.component';
+import { LoginGuard } from './login-guard.service';
 
 @NgModule({
   declarations: [LoginFormComponent, GoogleLoginComponent],
@@ -18,12 +19,13 @@ import { GoogleLoginComponent } from './google/google-login.component';
     MdbTabsModule,
     MdbValidationModule,
     RouterModule.forChild([
-      {path: '', component: LoginFormComponent},
+      {path: '', component: LoginFormComponent, canActivate: [LoginGuard]},
       {path: 'auth/google/login/:accessToken/:refreshToken', component: GoogleLoginComponent},
     ])
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    LoginGuard
   ]
 })
 export class AuthModule { }

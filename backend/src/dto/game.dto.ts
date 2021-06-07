@@ -1,11 +1,8 @@
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class GameDto {
-  @IsNumber() @IsOptional()
-  readonly id: number;
-
   @IsString()
-  readonly name: string;
+  readonly roomName: string;
 
   @IsString() @IsOptional()
   readonly password: string;

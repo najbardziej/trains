@@ -1,9 +1,9 @@
 export interface IGame {
-    GameId: number ,
-    RoomName: string,
-    Player1: string,
-    Player2: string,
-    Player3: string,
-    Player4: string,
-    Player5: string,
+    _id: number,
+    roomName: string,
+    player1: string,
+    player2: string,
+    player3: string,
+    player4: string,
+    player5: string,
 }

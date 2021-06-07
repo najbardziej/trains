@@ -1,36 +1,64 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Schema } from 'mongoose';
 import { GameDto } from '../dto/game.dto';
-//import { Games } from '../games';
+import { Game, GameDocument } from 'src/schemas/game.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
+import { GameEntity } from 'src/entities/game.entity';
 
 
 @Injectable()
 export class GamesService {
-  private readonly games: GameDto[] = []
 
-  findAll(): GameDto[] {
-    return this.games;
+  constructor(
+    @InjectModel(Game.name) private gameModel: Model<GameDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>){}
+
+  async findAll(): Promise<any> { //GameEntity[]
+    return await Promise.all((await this.gameModel.find().exec())
+      .map(async (game) => <GameEntity>{
+        roomName: game.roomName,
+        player1: (await this.userModel.findById(game.player1))?.username,
+        player2: (await this.userModel.findById(game.player2))?.username,
+        player3: (await this.userModel.findById(game.player3))?.username,
+        player4: (await this.userModel.findById(game.player4))?.username,
+        player5: (await this.userModel.findById(game.player5))?.username,
+      }));
   }
 
-  create(newGame: GameDto) {
-    const id = Date.now(); //TODO: change
-    this.games[id] = { ...newGame, id }
+  async create(gameDto: GameDto, username:string) {
+    const user = await this.userModel.findOne({username: username});
+
+    return (new this.gameModel({
+      roomName: gameDto.roomName,
+      player1: user,
+      player2: null,
+      player3: null,
+      player4: null,
+      player5: null,
+      
+    })).save();
   }
 
-  find(id: number): GameDto {
-    const game: GameDto = this.games[id];
-    if (!game) throw new Error('No games found.');
+  // async find(id: number): GameDocument {
+  //   const game: GameDto = this.games[id];
+  //   if (!game) throw new Error('No games found.');
 
-    return game;
-  }
+  //   return game;
+  // }
 
-  update(game: GameDto) {
-    if (!this.games[game.id]) throw new Error('No game found.');
+  // async join(game: GameDto, username: string) {
 
-    this.games[game.id] = game;
-  }
+  //   if (!this.games[game.id]) throw new Error('No game found.');
 
-  delete(id: number) {
-    const game: GameDto = this.games[id];
-    if (!game) throw new Error('No game found.')
+  //   this.games[game.id] = game;
+  // }
+
+  async delete(id: Schema.Types.ObjectId, username: string) {
+    const game = await this.gameModel.findById(id);
+    if (game.player1.username != username) 
+      throw new ForbiddenException()
+
+    return this.gameModel.deleteOne({_id :game});
   }
 }

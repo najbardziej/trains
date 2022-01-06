@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginFormComponent } from './login-form/login-form.component';
-import { MdbModule, MdbFormsModule, MdbTabsModule, MdbValidationModule } from 'mdb-angular-ui-kit';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
+import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
@@ -14,7 +16,6 @@ import { LoginGuard } from './login-guard.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MdbModule,
     MdbFormsModule,
     MdbTabsModule,
     MdbValidationModule,

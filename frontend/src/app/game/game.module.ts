@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { GamesListComponent } from './games-list/games-list.component';
 import { FormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
-import { MdbModule } from 'mdb-angular-ui-kit';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { AuthGuard } from '../auth/auth-guard.service';
@@ -17,7 +16,6 @@ import { AuthGuard } from '../auth/auth-guard.service';
   imports: [
     CommonModule,
     FormsModule,
-    MdbModule,
     RouterModule.forChild([
       {path: 'games', component: GamesListComponent, canActivate: [AuthGuard] }
     ])

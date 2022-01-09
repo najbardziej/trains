@@ -37,4 +37,4 @@ jobs:
       run: docker compose build
 
     - name: Publish image
-      run: docker compose push
+      run: docker compose push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}

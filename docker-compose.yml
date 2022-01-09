@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: nestjs
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+    - 7000:7000
+    networks:
+    - backend
+  frontend:
+    container_name: angular
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+    - 8000:80
+    networks:
+    - frontend
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
+
+# TODO: Expose only frontend (both are exposed for better testing experience)

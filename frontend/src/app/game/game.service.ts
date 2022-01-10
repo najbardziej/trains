@@ -9,7 +9,7 @@ import { IGame } from './game';
 })
 export class GameService {
 
-  private gamesUrl = 'http://localhost:7000/games'
+  private gamesUrl = 'http://trainsgame2.azurewebsites.net:7000/games'
 
   constructor(private http: HttpClient) { }
 

@@ -9,7 +9,7 @@ import { Token } from '../model/token';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:7000/auth/'
+  private baseUrl = 'http://trainsgame2.azurewebsites.net:7000/auth/'
   constructor(private httpClient: HttpClient) { }
 
   login(user: User) : Observable<any> {

@@ -3,6 +3,7 @@ version: '3.8'
 services:
   backend:
     container_name: nestjs
+    image: ghcr.io/najbardziej/trains/backend  
     build:
       context: backend
       dockerfile: Dockerfile
@@ -12,6 +13,7 @@ services:
     - backend
   frontend:
     container_name: angular
+    image: ghcr.io/najbardziej/trains/frontend  
     build:
       context: frontend
       dockerfile: Dockerfile

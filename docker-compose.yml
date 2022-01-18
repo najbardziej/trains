@@ -13,7 +13,7 @@ services:
     - backend
   frontend:
     container_name: angular
-    image: ghcr.io/najbardziej/trains/frontend  
+    image: ghcr.io/najbardziej/trains/frontend
     build:
       context: frontend
       dockerfile: Dockerfile

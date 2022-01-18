@@ -9,8 +9,6 @@ services:
       dockerfile: Dockerfile
     ports:
     - 7000:7000
-    networks:
-    - backend
   frontend:
     container_name: angular
     image: ghcr.io/najbardziej/trains/frontend
@@ -19,12 +17,5 @@ services:
       dockerfile: Dockerfile
     ports:
     - 8000:80
-    networks:
-    - frontend
-networks:
-  backend:
-    driver: bridge
-  frontend:
-    driver: bridge
 
 # TODO: Expose only frontend (both are exposed for better testing experience)

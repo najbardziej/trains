@@ -15,7 +15,7 @@ export class AuthService {
 
   async validateUser(usernameOrEmail: string, pass: string): Promise<any> {
     let user = await this.usersService.findOne(usernameOrEmail);
-    if (pass = "") {
+    if (pass == "") {
       throw new UnauthorizedException("Use OAuth");
     }
     if (user && await bcrypt.compare(pass, user.password)) {

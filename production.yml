@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: nestjs
+    image: ghcr.io/najbardziej/trains/backend  
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+    - 7000:7000
+  frontend:
+    container_name: angular
+    image: ghcr.io/najbardziej/trains/frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      args:
+        app_environment: production
+    ports:
+    - 8000:80
+
+# TODO: Expose only frontend (both are exposed for better testing experience)

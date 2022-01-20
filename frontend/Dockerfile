@@ -1,5 +1,7 @@
 FROM node:16.13.1-alpine as build
 
+ARG app_environment
+
 WORKDIR /usr/src/app
 
 COPY package.json package.json
@@ -8,7 +10,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npm run build -- --configuration ${app_environment}
 
 FROM nginx:1.21.5-alpine
 

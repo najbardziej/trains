@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 import { User } from '../../model/user';
 import { AuthService } from '../auth.service';
 
@@ -115,7 +116,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   googleLogin(): void {
-    window.location.href = 'http://localhost:7000/auth/google';
+    window.location.href = `${environment.apiUrl}/auth/google`;
   }
 
 }

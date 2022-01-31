@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { environment } from 'src/environments/environment';
 import { User } from '../../model/user';
 import { AuthService } from '../auth.service';
@@ -40,6 +41,7 @@ export class LoginFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private socialAuthService: SocialAuthService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -115,8 +117,10 @@ export class LoginFormComponent implements OnInit {
     this.router.navigate(['/games']);
   }
 
-  googleLogin(): void {
-    window.location.href = `${environment.apiUrl}/auth/google`;
+  async googleLogin(): Promise<any> {
+    console.log("google login started")
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(d => console.log(d))
+      .catch(error => console.log(error))
   }
-
 }

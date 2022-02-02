@@ -9,6 +9,7 @@ import { Token } from '../../model/token';
   styles: [
   ]
 })
+
 export class GoogleLoginComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
@@ -16,6 +17,7 @@ export class GoogleLoginComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
+    
     const routeParams = this.route.snapshot.paramMap;
     const token: Token = {
       accessToken: routeParams.get('accessToken')!,

@@ -8,10 +8,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { JwtRefreshStrategy } from './jwt-refresh.strategy';
-import { GoogleStrategy } from './google.strategy';
+import { GoogleAuthService } from './google-auth.service';
+// import { GoogleStrategy } from './google.strategy';
 
 @Module({
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy, GoogleStrategy],
+  providers: [AuthService, GoogleAuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy], // GoogleStrategy
   imports: [UsersModule, HttpModule, PassportModule, JwtModule.registerAsync({
     useFactory: async () => ({
       secret: process.env.JWT_SECRET,

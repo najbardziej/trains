@@ -33,6 +33,7 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
+    "googleapis": "^92.0.0",
     "mongoose": "^5.12.5",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",

@@ -120,7 +120,11 @@ export class LoginFormComponent implements OnInit {
   async googleLogin(): Promise<any> {
     console.log("google login started")
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(d => console.log(d))
+      .then(token => {
+        console.log(token)
+        let result = this.authService.googleLogin(token.authToken);
+        console.log("result", result)
+      })
       .catch(error => console.log(error))
   }
 }

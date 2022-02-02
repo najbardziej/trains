@@ -34,6 +34,10 @@ export class AuthService {
     }));
   }
 
+  googleLogin(authToken: string) {
+    return this.httpClient.post(`${this.baseUrl}/googleLogin`, { authToken })
+  }
+
   isAuthenticated(): boolean {
     return !!localStorage.getItem('accessToken');
   }

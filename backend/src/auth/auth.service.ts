@@ -4,11 +4,14 @@ import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt';
 import { UserDto } from 'src/dto/user.dto';
 import { UserRegisterDto } from 'src/dto/userRegister.dto';
-import { TokenDto } from 'src/dto/refreshToken.dto';
+import { TokenDto } from 'src/dto/token.dto';
+import { GoogleAuthService } from './google-auth.service';
+import { GoogleTokenDto } from 'src/dto/googleToken.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private googleAuthService: GoogleAuthService,
     private usersService: UsersService,
     private jwtService: JwtService
   ) { }
@@ -28,12 +31,12 @@ export class AuthService {
   async register(userRegisterDto: UserRegisterDto): Promise<any> {
     try {
       const result = await this.usersService.create(userRegisterDto);
-      const payload = {username: result.username}
+      const payload = { username: result.username }
       return {
         accessToken: this.jwtService.sign(payload),
         refreshToken: await this.generateRefreshToken(result.username)
       }
-    } 
+    }
     catch {
       throw new UnauthorizedException();
     }
@@ -57,7 +60,7 @@ export class AuthService {
     try {
       const username = this.jwtService.decode(token.accessToken)['username'];
       const user = await this.usersService.findOne(username);
-      
+
       if (!await bcrypt.compare(token.refreshToken, user.refreshToken)) {
         throw new UnauthorizedException();
       }
@@ -111,39 +114,47 @@ export class AuthService {
     return token;
   }
 
-  async googleLogin(request: any) : Promise<TokenDto>{
+  async googleLogin(token: GoogleTokenDto): Promise<any> {
 
-    let user = await this.usersService.findOne(request.email);
-
-    if (user && user.password == '') {
-
-      const payload = {username: user.username}
-      user = await this.usersService.setCurrentRefreshToken(request.accessToken, user.username);
-  
-      return {
-        accessToken: this.jwtService.sign(payload),
-        refreshToken: request.accessToken
-      }
-
-    } else if (!user) {
-
-      const newUser : UserRegisterDto = {
-        username: request.email,
-        email: request.email,
-        password: "",
-      }
-  
-      const result = await this.usersService.create(newUser);
-      const payload = {username: result.username}
-      user = await this.usersService.setCurrentRefreshToken(request.accessToken, request.email);
-  
-      return {
-        accessToken: this.jwtService.sign(payload),
-        refreshToken: request.accessToken
-      }
-      
-    } else {
-      throw new UnauthorizedException("Not OAuth user!");
+    let tokenInfo = this.googleAuthService.validateToken(token.authToken);
+    if (!tokenInfo) {
+      throw new UnauthorizedException("Bad google auth token");
     }
+
+    console.log(tokenInfo);
+    return true;
+
+    // let user = await this.usersService.findOne(request.email);
+
+    // if (user && user.password == '') {
+
+    //   const payload = { username: user.username }
+    //   user = await this.usersService.setCurrentRefreshToken(request.accessToken, user.username);
+
+    //   return {
+    //     accessToken: this.jwtService.sign(payload),
+    //     refreshToken: request.accessToken
+    //   }
+
+    // } else if (!user) {
+
+    //   const newUser: UserRegisterDto = {
+    //     username: request.email,
+    //     email: request.email,
+    //     password: "",
+    //   }
+
+    //   const result = await this.usersService.create(newUser);
+    //   const payload = { username: result.username }
+    //   user = await this.usersService.setCurrentRefreshToken(request.accessToken, request.email);
+
+    //   return {
+    //     accessToken: this.jwtService.sign(payload),
+    //     refreshToken: request.accessToken
+    //   }
+
+    // } else {
+    //   throw new UnauthorizedException("Not OAuth user!");
+    // }
   }
 }

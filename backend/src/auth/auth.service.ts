@@ -116,45 +116,44 @@ export class AuthService {
 
   async googleLogin(token: GoogleTokenDto): Promise<any> {
 
-    let tokenInfo = this.googleAuthService.validateToken(token.authToken);
-    if (!tokenInfo) {
+    console.log("googleLogin called", token);
+    let tokenInfo;
+    try {
+      tokenInfo = await this.googleAuthService.validateToken(token.authToken);
+    }
+    catch {
       throw new UnauthorizedException("Bad google auth token");
     }
 
-    console.log(tokenInfo);
-    return true;
+    let user = await this.usersService.findOne(tokenInfo.email);
 
-    // let user = await this.usersService.findOne(request.email);
+    if (user && user.password == '') {
 
-    // if (user && user.password == '') {
+      const payload = { username: user.username }
+      
+      return {
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: await this.generateRefreshToken(user.username)
+      }
 
-    //   const payload = { username: user.username }
-    //   user = await this.usersService.setCurrentRefreshToken(request.accessToken, user.username);
+    } else if (!user) {
 
-    //   return {
-    //     accessToken: this.jwtService.sign(payload),
-    //     refreshToken: request.accessToken
-    //   }
+      const newUser: UserRegisterDto = {
+        username: tokenInfo.email,
+        email: tokenInfo.email,
+        password: "",
+      }
 
-    // } else if (!user) {
+      const result = await this.usersService.create(newUser);
+      const payload = { username: result.username }
 
-    //   const newUser: UserRegisterDto = {
-    //     username: request.email,
-    //     email: request.email,
-    //     password: "",
-    //   }
+      return {
+        accessToken: this.jwtService.sign(payload),
+        refreshToken: await this.generateRefreshToken(user.username)
+      }
 
-    //   const result = await this.usersService.create(newUser);
-    //   const payload = { username: result.username }
-    //   user = await this.usersService.setCurrentRefreshToken(request.accessToken, request.email);
-
-    //   return {
-    //     accessToken: this.jwtService.sign(payload),
-    //     refreshToken: request.accessToken
-    //   }
-
-    // } else {
-    //   throw new UnauthorizedException("Not OAuth user!");
-    // }
+    } else {
+      throw new UnauthorizedException("Not OAuth user!");
+    }
   }
 }

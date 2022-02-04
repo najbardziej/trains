@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
-import { environment } from 'src/environments/environment';
 import { User } from '../../model/user';
 import { AuthService } from '../auth.service';
 
@@ -117,14 +116,27 @@ export class LoginFormComponent implements OnInit {
     this.router.navigate(['/games']);
   }
 
-  async googleLogin(): Promise<any> {
-    console.log("google login started")
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(token => {
-        console.log(token)
-        let result = this.authService.googleLogin(token.authToken);
-        console.log("result", result)
+  async googleLogin(): Promise<void> {
+
+    let token;
+    await this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(googleToken => {
+        token = googleToken;
       })
-      .catch(error => console.log(error))
+      .catch(err => {
+        this.registerErrorMessage = err.message;
+      })
+    
+    if (token){
+      this.authService.googleLogin(token['authToken'])
+        .subscribe({
+          next: () => this.onComplete(),
+          error: err => {
+            this.registerErrorMessage = err.message;
+          }
+        })
+      } else {
+        this.registerErrorMessage = "Unknown OAuth error occurred";
+    }
   }
 }

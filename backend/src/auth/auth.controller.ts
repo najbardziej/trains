@@ -8,7 +8,6 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { TokenDto } from 'src/dto/token.dto';
 import { GoogleTokenDto } from 'src/dto/googleToken.dto';
-// import { GoogleAuthGuard } from './google-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -25,11 +24,6 @@ export class AuthController {
   async login(@Body() userDto: UserDto) {
     return this.authService.login(userDto);
   }
-
-  // @Post('loginViaToken')
-  // async loginViaToken(@Body() token: TokenDto) {
-  //   return this.authService.loginViaToken(token);
-  // }
 
   @UseGuards(JwtRefreshGuard)
   @Post('logout')
@@ -50,19 +44,8 @@ export class AuthController {
     return req.user;
   }
 
-  // @UseGuards(GoogleAuthGuard)
-  @Get('google')
+  @Post('google')
   async googleAuth(@Body() token: GoogleTokenDto) {
     return this.authService.googleLogin(token);
   }
-
-  // @UseGuards(GoogleAuthGuard)
-  // @Get('google/redirect')
-  // async googleAuthRedirect(@Request() req, @Res() res) {
-  //   var token = await this.authService.googleLogin(req.user)
-
-  //   return res.redirect('http://localhost:4200/auth/google/login/' + 
-  //     token.accessToken + '/' +
-  //     token.refreshToken);
-  // }
 }

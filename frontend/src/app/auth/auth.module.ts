@@ -41,7 +41,7 @@ import { environment } from 'src/environments/environment';
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(environment.googleClientID, {ux_mode: 'redirect'})
+            provider: new GoogleLoginProvider(environment.googleClientID)
           }
         ],
         onError: (err) => {

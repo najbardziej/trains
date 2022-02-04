@@ -9,10 +9,9 @@ import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 import { GoogleAuthService } from './google-auth.service';
-// import { GoogleStrategy } from './google.strategy';
 
 @Module({
-  providers: [AuthService, GoogleAuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy], // GoogleStrategy
+  providers: [AuthService, GoogleAuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
   imports: [UsersModule, HttpModule, PassportModule, JwtModule.registerAsync({
     useFactory: async () => ({
       secret: process.env.JWT_SECRET,

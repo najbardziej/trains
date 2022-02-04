@@ -34,8 +34,8 @@ export class AuthService {
     }));
   }
 
-  googleLogin(authToken: string) {
-    return this.httpClient.post(`${this.baseUrl}/googleLogin`, { authToken })
+  googleLogin(authToken: string) : Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}/google`, { authToken });
   }
 
   isAuthenticated(): boolean {

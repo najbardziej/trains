@@ -1,34 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../auth.service';
-import { Token } from '../../model/token';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'trains-google-login',
-  template: ``,
+  template: `
+  <button type="button" class="btn google-signin">
+    <img src="https://developers.google.com/identity/images/g-logo.png" >
+    <span>{{buttonText}}</span>
+  </button>`,
   styles: [
+    `.google-signin {
+      height: 40px;
+      box-sizing: border-box;
+      padding: 8px 
+    }`,
+    `img { 
+      height: 24px; 
+      width: 24px; 
+    }`,
+    `span { 
+      display: inline-block;
+      font-family: Roboto, sans-serif; 
+      font-size: 14px; 
+      color: #757575; 
+      padding: 5px 24px ; 
+      line-height: 14px;
+    }`,
   ]
 })
-
-export class GoogleLoginComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute,
-    private authService: AuthService,
-    private router: Router) { }
-
-  ngOnInit(): void {
-    
-    const routeParams = this.route.snapshot.paramMap;
-    const token: Token = {
-      accessToken: routeParams.get('accessToken')!,
-      refreshToken: routeParams.get('refreshToken')!
-    }
-    this.authService.loginViaToken(token)
-      .subscribe({
-        next: () => {
-          this.router.navigate(['games']);
-        }
-      })
-    this.router.navigate([''])
-  }
+export class GoogleLoginComponent {
+  @Input() buttonText = '';
 }

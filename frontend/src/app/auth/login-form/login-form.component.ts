@@ -135,8 +135,8 @@ export class LoginFormComponent implements OnInit {
             this.registerErrorMessage = err.message;
           }
         })
-      } else {
-        this.registerErrorMessage = "Unknown OAuth error occurred";
+    } else {
+      this.registerErrorMessage = "Unknown OAuth error occurred";
     }
   }
 }

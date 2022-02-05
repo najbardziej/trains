@@ -8,25 +8,9 @@
               <mdb-tabs [pills]="true" [justified]="true">
                 <mdb-tab title="Login">
                   <form [formGroup]="loginForm" (ngSubmit)="login()">
-                    <div class="text-center mb-3">
-                      <p>Sign in with:</p>
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #3b5998;" disabled>
-                        <i class="fab fa-facebook-f fa-lg"></i>
-                      </button>
-
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #dd4b39;" (click)="googleLogin()">
-                        <i class="fab fa-google fa-lg"></i>
-                      </button>
-
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #7289da;" disabled>
-                        <i class="fab fa-discord fa-lg"></i>
-                      </button>
-
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #333333;" disabled>
-                        <i class="fab fa-github fa-lg"></i>
-                      </button>
+                    <div class="text-center m-3 mt-4">
+                      <trains-google-login buttonText="Sign in with Google" (click)="googleLogin()"></trains-google-login>
                     </div>
-
                     <p class="text-center">or:</p>
 
                     <mdb-form-control class="form-outline mb-4">
@@ -43,9 +27,9 @@
                       </mdb-error>
                     </mdb-form-control>
 
-                    <div class="mb-4 d-flex justify-content-center">
+                    <!-- <div class="mb-4 d-flex justify-content-center">
                         <a href="#!">Forgot password?</a>
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
                   </form>
@@ -53,22 +37,9 @@
                 <mdb-tab title="Register">
                   <form [formGroup]="registerForm" (ngSubmit)="register()">
                     <div class="text-center mb-3">
-                      <p>Sign up with:</p>
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #3b5998;" disabled>
-                        <i class="fab fa-facebook-f fa-lg"></i>
-                      </button>
-
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #dd4b39;" (click)="googleLogin()">
-                        <i class="fab fa-google fa-lg"></i>
-                      </button>
-
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #7289da;" disabled>
-                        <i class="fab fa-discord fa-lg"></i>
-                      </button>
-
-                      <button type="button" class="btn btn-primary btn-floating mx-1" style="background-color: #333333;" disabled>
-                        <i class="fab fa-github fa-lg"></i>
-                      </button>
+                      <div class="text-center m-3 mt-4">
+                        <trains-google-login buttonText="Sign up with Google" (click)="googleLogin()"></trains-google-login>
+                      </div>
                     </div>
 
                     <p class="text-center">or:</p>

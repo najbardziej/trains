@@ -7,8 +7,6 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { AuthGuard } from '../auth/auth-guard.service';
 
-
-
 @NgModule({
   declarations: [
     GamesListComponent,

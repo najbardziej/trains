@@ -1,4 +1,4 @@
-FROM node:16.13.1-alpine AS build
+FROM node:16.13.1-alpine AS dev
 
 WORKDIR /usr/src/app
 
@@ -20,7 +20,7 @@ RUN npm install --only=production
 
 COPY . .
 
-COPY --from=build /usr/src/app/dist ./dist
+COPY --from=dev /usr/src/app/dist ./dist
 
 EXPOSE 7000
 

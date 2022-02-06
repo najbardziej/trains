@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { IGame } from './game';
 import { environment } from 'src/environments/environment';
 
@@ -19,6 +19,10 @@ export class GameService {
       tap(data => console.log("All", JSON.stringify(data))),
       catchError(this.handleError)
     );
+  }
+
+  createGameRoom(): Observable<any> {
+    return this.http.post(this.gamesUrl, { roomName: Math.random().toString(36).replace(/[^a-z]+/g, '') })
   }
 
   private handleError(err: HttpErrorResponse) {

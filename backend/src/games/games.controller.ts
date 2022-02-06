@@ -4,18 +4,20 @@ import {  } from '../dto/game.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GameDto } from 'src/dto/game.dto';
-import { GameEntity } from 'src/entities/game.entity';
+import { GameRoomEntity } from 'src/entities/game-room.entity';
 import { Schema } from 'mongoose';
+import { EventsGateway } from 'src/events/events.gateway';
 
 @ApiTags('games')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('games')
 export class GamesController {
-  constructor(private readonly gamesService: GamesService) { }
+  constructor(private readonly gamesService: GamesService, 
+    private readonly eventsGateway: EventsGateway) { }
 
   @Get()
-  async index(): Promise<GameEntity[]> {
+  async index(): Promise<GameRoomEntity[]> {
     return this.gamesService.findAll();
   }
 
@@ -26,7 +28,10 @@ export class GamesController {
 
   @Post()
   async create(@Body() gameDto: GameDto, @Req() req) {
-    this.gamesService.create(gameDto, req.user);
+    await this.gamesService.create(gameDto, req.user.username);
+    await this.eventsGateway.emitGameRooms(
+      await this.gamesService.findAll()
+    );
   }
 
   // @Put()

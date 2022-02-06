@@ -24,11 +24,13 @@ export class AuthInterceptor implements HttpInterceptor {
       .pipe(
         tap(event => {
           if (event.type === HttpEventType.Response) {
-            if (event.body.accessToken) {
-              localStorage.setItem('accessToken', event.body.accessToken);
-            }
-            if (event.body.refreshToken) {
-              localStorage.setItem('refreshToken', event.body.refreshToken);
+            if (event.body){
+              if (event.body.accessToken) {
+                localStorage.setItem('accessToken', event.body.accessToken);
+              }
+              if (event.body.refreshToken) {
+                localStorage.setItem('refreshToken', event.body.refreshToken);
+              }
             }
           }
         })

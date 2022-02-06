@@ -4,7 +4,7 @@ import { Model, Schema } from 'mongoose';
 import { GameDto } from '../dto/game.dto';
 import { Game, GameDocument } from 'src/schemas/game.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { GameEntity } from 'src/entities/game.entity';
+import { GameRoomEntity } from 'src/entities/game-room.entity';
 
 
 @Injectable()
@@ -14,15 +14,11 @@ export class GamesService {
     @InjectModel(Game.name) private gameModel: Model<GameDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>){}
 
-  async findAll(): Promise<any> { //GameEntity[]
+  async findAll(): Promise<GameRoomEntity[]> {
     return await Promise.all((await this.gameModel.find().exec())
-      .map(async (game) => <GameEntity>{
+      .map(async (game) => <GameRoomEntity>{
         roomName: game.roomName,
-        player1: (await this.userModel.findById(game.player1))?.username,
-        player2: (await this.userModel.findById(game.player2))?.username,
-        player3: (await this.userModel.findById(game.player3))?.username,
-        player4: (await this.userModel.findById(game.player4))?.username,
-        player5: (await this.userModel.findById(game.player5))?.username,
+        players: game.players.map(x => x.username),
       }));
   }
 
@@ -31,12 +27,7 @@ export class GamesService {
 
     return (new this.gameModel({
       roomName: gameDto.roomName,
-      player1: user,
-      player2: null,
-      player3: null,
-      player4: null,
-      player5: null,
-      
+      players: [ user ],
     })).save();
   }
 
@@ -56,7 +47,7 @@ export class GamesService {
 
   async delete(id: Schema.Types.ObjectId, username: string) {
     const game = await this.gameModel.findById(id);
-    if (game.player1.username != username) 
+    if (game.players[0].username != username) 
       throw new ForbiddenException()
 
     return this.gameModel.deleteOne({_id :game});

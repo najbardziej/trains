@@ -5,8 +5,7 @@ COPY tsconfig*.json ./
 RUN npm install --only=development
 RUN npm run build
 COPY . .
-CMD ["ls", "/usr/src/app/"]
-
+RUN echo $(ls /usr/src/app/)
 
 FROM node:16.13.1-alpine
 COPY --from=build /usr/src/app/dist ./dist

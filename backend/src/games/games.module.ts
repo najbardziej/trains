@@ -3,18 +3,20 @@ import { GamesService } from './games.service';
 import { GamesController } from './games.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Game, GameSchema } from 'src/schemas/game.schema';
-import { UsersService } from 'src/users/users.service';
 import { User, UserSchema } from 'src/schemas/user.schema';
-import { EventsGateway } from 'src/events/events.gateway';
+import { EventsModule } from 'src/events/events.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
+    EventsModule,
+    UsersModule,
     MongooseModule.forFeature([
       { name: Game.name, schema: GameSchema},
       { name: User.name, schema: UserSchema}
     ])
   ],
-  providers: [GamesService, UsersService, EventsGateway],
+  providers: [GamesService],
   controllers: [GamesController]
 })
 export class GamesModule { }

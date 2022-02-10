@@ -14,6 +14,11 @@ export class SocketService {
     let rooms = this.socket.ioSocket
   }
 
+  identify(username: string) {
+    console.log(username)
+    this.socket.emit("identify", { username })
+  }
+
   getGameRoomsObservable(): Observable<any> {
     return this.socket.fromEvent("game-rooms").pipe(
       tap(data => console.log("All", JSON.stringify(data))),

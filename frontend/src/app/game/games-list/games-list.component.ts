@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 import { IGame } from '../game';
 import { GameService } from '../game.service';
 import { SocketService } from '../socket/socket.service';
@@ -13,14 +14,18 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly gameService: GameService,
-    private readonly socketService: SocketService
+    private readonly socketService: SocketService,
+    private readonly authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    console.log("ngOnInit called");
     this.gameService.getGames().subscribe(
       ((games: IGame[]) => this.games = games),
       (err) => console.log(err)
     );
+
+    this.socketService.identify(this.authService.getUsername());
 
     this.socketService.getGameRoomsObservable().subscribe((games: IGame[]) => {
       console.log("getGameRoomsObservable success", games);

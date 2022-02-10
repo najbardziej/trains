@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { User } from '../model/user';
 import { Token } from '../model/token';
 import { environment } from 'src/environments/environment';
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,15 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!localStorage.getItem('accessToken');
+  }
+
+  getUsername(): string {
+    try {
+      let token = localStorage.getItem('accessToken')
+      let obj: any = jwt_decode(token!);
+      return obj.username;
+    } catch {
+      return ""
+    }
   }
 }

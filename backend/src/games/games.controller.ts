@@ -13,7 +13,8 @@ import { EventsGateway } from 'src/events/events.gateway';
 @UseGuards(JwtAuthGuard)
 @Controller('games')
 export class GamesController {
-  constructor(private readonly gamesService: GamesService, 
+  constructor(
+    private readonly gamesService: GamesService, 
     private readonly eventsGateway: EventsGateway) { }
 
   @Get()

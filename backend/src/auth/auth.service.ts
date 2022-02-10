@@ -7,7 +7,6 @@ import { UserRegisterDto } from 'src/dto/userRegister.dto';
 import { TokenDto } from 'src/dto/token.dto';
 import { GoogleAuthService } from './google-auth.service';
 import { GoogleTokenDto } from 'src/dto/googleToken.dto';
-import { EventsGateway } from 'src/events/events.gateway';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +14,6 @@ export class AuthService {
     private readonly googleAuthService: GoogleAuthService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly eventsGateway: EventsGateway
   ) { }
 
   async validateUser(usernameOrEmail: string, pass: string): Promise<any> {

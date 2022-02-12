@@ -6,12 +6,14 @@ import { RouterModule } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { AuthGuard } from '../auth/auth-guard.service';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 
 @NgModule({
   declarations: [
     GamesListComponent,
   ],
   imports: [
+    MdbFormsModule,
     CommonModule,
     FormsModule,
     RouterModule.forChild([

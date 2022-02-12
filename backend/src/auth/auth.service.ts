@@ -115,8 +115,6 @@ export class AuthService {
   }
 
   async googleLogin(token: GoogleTokenDto): Promise<any> {
-
-    console.log("googleLogin called", token);
     let tokenInfo;
     try {
       tokenInfo = await this.googleAuthService.validateToken(token.authToken);

@@ -1,5 +1,5 @@
 export interface IGame {
-    _id: number,
+    id: string,
     roomName: string,
     players: string[],
 }

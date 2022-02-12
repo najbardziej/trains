@@ -38,11 +38,10 @@ export class EventsGateway implements OnGatewayDisconnect {
   // emitGameState(gameId: string, gameState: GameStateEntity) {
   //   this.server.emit(gameId, gameState);
   // }
-
   
   @SubscribeMessage('identify')
   findAll(@MessageBody() data: any, @ConnectedSocket() client: any) {
-    console.log("identify data:", data)
+    /// TODO: secure by receiving accesstoken, verify it and extract username from payload 
     client.username = data.username;
   }
 }

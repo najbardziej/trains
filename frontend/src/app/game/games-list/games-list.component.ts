@@ -19,16 +19,14 @@ export class GamesListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    console.log("ngOnInit called");
     this.gameService.getGames().subscribe(
       ((games: IGame[]) => this.games = games),
-      (err) => console.log(err)
+      (err) => console.error(err)
     );
 
     this.socketService.identify(this.authService.getUsername());
 
-    this.socketService.getGameRoomsObservable().subscribe((games: IGame[]) => {
-      console.log("getGameRoomsObservable success", games);
+    this.subscription = this.socketService.getGameRoomsObservable().subscribe((games: IGame[]) => {
       this.games = games;
     });
   }
@@ -38,13 +36,62 @@ export class GamesListComponent implements OnInit, OnDestroy {
   }
 
   createGameRoom() {
-    this.gameService.createGameRoom().subscribe((x => console.log(x)))
+    this.gameService.createGameRoom().subscribe();
+  }
+
+  startGame(gameId: string) {
+    console.log(gameId);
+  }
+
+  leaveGameRoom(gameId: string) {
+    console.log(gameId);
+  }
+
+  joinGameRoom(gameId: string) {
+    console.log(gameId);
+  }
+
+  canCreateRoom(): boolean {
+    return !this.filteredGames.some(x => x.players.includes(this.authService.getUsername()))
+  }
+
+  canStartGame(gameId: string): boolean {
+    let game = this.filteredGames.find(x => x.id === gameId);
+    if (game!.players.length < 2) {
+      return false;
+    }
+    if (game?.players[0] == this.authService.getUsername()) {
+      return true;
+    }
+    return false;
+  }
+
+  canJoinRoom(gameId: string): boolean {
+    if (this.filteredGames.some(x => x.players.includes(this.authService.getUsername()))) {
+      return false;
+    }
+    let game = this.filteredGames.find(x => x.id === gameId);
+    if (game?.players.includes(this.authService.getUsername())) {
+      return false;
+    }
+    if (game?.players.length == 5) {
+      return false;
+    }
+    return true;
+  }
+  
+  canLeaveRoom(gameId: string): boolean { 
+    let game = this.filteredGames.find(x => x.id === gameId);
+    if (game?.players.includes(this.authService.getUsername())) {
+      return true;
+    }
+    return false;
   }
 
   get filteredGames(): IGame[] {
     return this.games.filter((game: IGame) =>
       game.roomName.toLocaleLowerCase().includes(this.listFilter.toLocaleLowerCase()) ||
-      game.players[0].toLocaleLowerCase().includes(this.listFilter.toLocaleLowerCase()))
+      game.players.map(x => x.toLocaleLowerCase()).some(x => x.includes(this.listFilter.toLocaleLowerCase())))
   }
 
   games: IGame[] = [];

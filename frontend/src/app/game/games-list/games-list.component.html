@@ -6,12 +6,8 @@
       <input type="search" class="form-control rounded" placeholder="Search" name="listFilter" mdbInput [(ngModel)]='listFilter'/>
     </div>
   </div>
-  <!-- <form class="form-inline md-form col-md-4">
-    <i class="fas fa-search"></i>
-    <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search">
-  </form> -->
 
-  <button (click)="createGameRoom()">CREATE GAME ROOM</button>
+  <button type="button" class="btn btn-secondary my-2" (click)="createGameRoom()" [disabled]="!canCreateRoom()">Create game room</button>
 
   <table class="table table-striped table-responsive-md btn-table table-sm">
     <thead>
@@ -22,7 +18,7 @@
         <th>Player 3</th>
         <th>Player 4</th>
         <th>Player 5</th>
-        <th>Action</th>
+        <th></th>
       </tr>
     </thead>
 
@@ -30,8 +26,11 @@
       <tr *ngFor='let game of filteredGames'>
         <th scope="row">{{game.roomName}}</th>
         <td *ngFor='let player of game.players'>{{player}}</td>
+        <td *ngFor='let _ of [].constructor(5 - game.players.length)'></td>
         <td>
-          <button mdbBtn color="teal" size="sm" mdbWavesEffect type="button" class="m-0">Join game</button>
+          <button *ngIf="canStartGame(game.id)" type="button" class="btn btn-success btn-rounded mx-2" (click)="startGame(game.id)">Start game</button>
+          <button *ngIf="canJoinRoom(game.id)" type="button" class="btn btn-primary btn-rounded mx-2" (click)="joinGameRoom(game.id)">Join room</button>
+          <button *ngIf="canLeaveRoom(game.id)" type="button" class="btn btn-danger btn-rounded mx-2" (click)="leaveGameRoom(game.id)">Leave room</button>
         </td>
       </tr>
     </tbody>

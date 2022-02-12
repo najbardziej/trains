@@ -11,11 +11,10 @@ export class SocketService {
   constructor(private socket: Socket) { }
 
   leaveAllRooms() {
-    let rooms = this.socket.ioSocket
+    
   }
 
   identify(username: string) {
-    console.log(username)
     this.socket.emit("identify", { username })
   }
 

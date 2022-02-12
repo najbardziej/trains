@@ -16,7 +16,6 @@ export class GameService {
 
   getGames(): Observable<IGame[]> {
     return this.http.get<IGame[]>(this.gamesUrl).pipe(
-      tap(data => console.log("All", JSON.stringify(data))),
       catchError(this.handleError)
     );
   }

@@ -15,8 +15,9 @@ export class GamesService {
     @InjectModel(User.name) private userModel: Model<UserDocument>){}
 
   async findAll(): Promise<GameRoomEntity[]> {
-    return await Promise.all((await this.gameModel.find().exec())
-      .map(async (game) => <GameRoomEntity>{
+    return await Promise.all((await this.gameModel.find().populate({ path: "players"}).exec())
+      .map(async (game: GameDocument) => <GameRoomEntity>{
+        id: game.id,
         roomName: game.roomName,
         players: game.players.map(x => x.username),
       }));

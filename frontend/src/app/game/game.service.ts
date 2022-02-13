@@ -20,6 +20,14 @@ export class GameService {
     );
   }
 
+  joinGameRoom(gameId: string): Observable<any> {
+    return this.http.put(`${this.gamesUrl}/join/${gameId}`, {})
+  }
+
+  leaveGameRoom(gameId: string): Observable<any> {
+    return this.http.put(`${this.gamesUrl}/leave/${gameId}`, {})
+  }
+
   createGameRoom(): Observable<any> {
     return this.http.post(this.gamesUrl, { roomName: Math.random().toString(36).replace(/[^a-z]+/g, '') })
   }

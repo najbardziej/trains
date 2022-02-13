@@ -7,15 +7,19 @@ import { GameDto } from 'src/dto/game.dto';
 import { GameRoomEntity } from 'src/entities/game-room.entity';
 import { Schema } from 'mongoose';
 import { EventsGateway } from 'src/events/events.gateway';
+import { ModuleRef } from '@nestjs/core';
+import { Inject, forwardRef } from '@nestjs/common'
 
 @ApiTags('games')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('games')
 export class GamesController {
+
   constructor(
     private readonly gamesService: GamesService, 
-    private readonly eventsGateway: EventsGateway) { }
+    private readonly eventsGateway: EventsGateway, 
+    ) { }
 
   @Get()
   async index(): Promise<GameRoomEntity[]> {
@@ -30,18 +34,32 @@ export class GamesController {
   @Post()
   async create(@Body() gameDto: GameDto, @Req() req) {
     await this.gamesService.create(gameDto, req.user.username);
-    await this.eventsGateway.emitGameRooms(
+    this.eventsGateway.emitGameRooms(
       await this.gamesService.findAll()
     );
   }
 
-  // @Put()
-  // async join(@Body() gameDto: GameDto, @Req() req) {
-  //   this.gamesService.join(gameDto);
-  // }
+  @Put("/join/:id")
+  async join(@Param('id') id: string, @Req() req) {
+    await this.gamesService.join(id, req.user.username);
+    this.eventsGateway.emitGameRooms(
+      await this.gamesService.findAll()
+    );
+  }
+
+  @Put("/leave/:id")
+  async leave(@Param('id') id: string, @Req() req) {
+    await this.gamesService.leave(id, req.user.username);
+    this.eventsGateway.emitGameRooms(
+      await this.gamesService.findAll()
+    );
+  }
 
   @Delete(':id')
-  async delete(@Param('id') id: Schema.Types.ObjectId, @Req() req) {
-    this.gamesService.delete(id, req.user);
+  async delete(@Param('id') id: string, @Req() req) {
+    await this.gamesService.delete(id, req.user.username);
+    this.eventsGateway.emitGameRooms(
+      await this.gamesService.findAll()
+    );
   }
 }

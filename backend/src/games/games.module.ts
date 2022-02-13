@@ -6,10 +6,11 @@ import { Game, GameSchema } from 'src/schemas/game.schema';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { EventsModule } from 'src/events/events.module';
 import { UsersModule } from 'src/users/users.module';
+import { forwardRef } from '@nestjs/common'
 
 @Module({
   imports: [
-    EventsModule,
+    forwardRef(() => EventsModule),
     UsersModule,
     MongooseModule.forFeature([
       { name: Game.name, schema: GameSchema},
@@ -17,6 +18,7 @@ import { UsersModule } from 'src/users/users.module';
     ])
   ],
   providers: [GamesService],
+  exports: [GamesService],
   controllers: [GamesController]
 })
 export class GamesModule { }

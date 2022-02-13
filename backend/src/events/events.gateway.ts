@@ -13,22 +13,38 @@ import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Server } from 'socket.io';
 import { GameRoomEntity } from 'src/entities/game-room.entity';
+import { GamesService } from 'src/games/games.service';
+import { Injectable, Inject, forwardRef, OnModuleInit } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })//TODO: secure it
-export class EventsGateway implements OnGatewayDisconnect {
-  private readonly gamesService
+@Injectable()
+export class EventsGateway implements  OnGatewayDisconnect { //OnModuleInit,
 
   @WebSocketServer()
   server: Server;
 
-  constructor() { }
+  constructor(
+    private readonly gamesService: GamesService
+    ) { }
 
-  handleDisconnect(client: any) {
-    console.log("disconnected: ", client.username)
+  // async onModuleInit() {
+  //   console.log("onModuleInit EventsGateway")
+  // }
+
+  async handleDisconnect(client: any) {
+    const game = await this.gamesService.findOne(client.username);
+    if (game) {
+      await this.gamesService.leave(game.id, client.username);
+      if (game.players.length == 1) {
+        await this.gamesService.delete(game.id, client.username);
+      }
+    }
+
+    this.emitGameRooms(await this.gamesService.findAll());
   }
 
   emitGameRooms(gameRoomEntities: GameRoomEntity[]) {

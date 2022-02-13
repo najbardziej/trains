@@ -44,11 +44,11 @@ export class GamesListComponent implements OnInit, OnDestroy {
   }
 
   leaveGameRoom(gameId: string) {
-    console.log(gameId);
+    this.gameService.leaveGameRoom(gameId).subscribe();
   }
 
   joinGameRoom(gameId: string) {
-    console.log(gameId);
+    this.gameService.joinGameRoom(gameId).subscribe();
   }
 
   canCreateRoom(): boolean {

@@ -42,9 +42,9 @@ export class EventsGateway implements  OnGatewayDisconnect { //OnModuleInit,
       if (game.players.length == 1) {
         await this.gamesService.delete(game.id, client.username);
       }
-    }
 
-    this.emitGameRooms(await this.gamesService.findAll());
+      this.emitGameRooms(await this.gamesService.findAll());
+    }
   }
 
   emitGameRooms(gameRoomEntities: GameRoomEntity[]) {

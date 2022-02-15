@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -12,7 +13,13 @@ import { SocketService } from '../socket/socket.service';
 })
 export class GamesListComponent implements OnInit, OnDestroy {
 
+  games: IGame[] = [];
+  listFilter: string = '';
+  subscription!: Subscription;
+  gameSubscription!: Subscription;
+
   constructor(
+    private readonly router: Router,
     private readonly gameService: GameService,
     private readonly socketService: SocketService,
     private readonly authService: AuthService
@@ -33,37 +40,40 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.gameSubscription.unsubscribe();
+  }
+
+  private createGameObservable(id: string) {
+    this.gameSubscription = this.socketService.getRoomObservable(id).subscribe((data: any) => {
+      this.router.navigate([`/game/${data.id}`]);
+    })
   }
 
   createGameRoom() {
-    this.gameService.createGameRoom().subscribe();
+    this.gameService.createGameRoom().subscribe((data: any) => {
+      this.createGameObservable(data.id);
+    });
   }
 
-  startGame(gameId: string) {
-    console.log(gameId);
+  joinGameRoom(gameId: string) {
+    this.gameService.joinGameRoom(gameId).subscribe(() => {
+      this.createGameObservable(gameId);
+    });
   }
 
   leaveGameRoom(gameId: string) {
     this.gameService.leaveGameRoom(gameId).subscribe();
+    if (this.gameSubscription) {
+      this.gameSubscription.unsubscribe();
+    }
   }
 
-  joinGameRoom(gameId: string) {
-    this.gameService.joinGameRoom(gameId).subscribe();
+  startGame(gameId: string) {
+    this.gameService.startGame(gameId).subscribe();
   }
 
   canCreateRoom(): boolean {
-    return !this.filteredGames.some(x => x.players.includes(this.authService.getUsername()))
-  }
-
-  canStartGame(gameId: string): boolean {
-    let game = this.filteredGames.find(x => x.id === gameId);
-    if (game!.players.length < 2) {
-      return false;
-    }
-    if (game?.players[0] == this.authService.getUsername()) {
-      return true;
-    }
-    return false;
+    return !this.filteredGames.some(x => x.players.includes(this.authService.getUsername()));
   }
 
   canJoinRoom(gameId: string): boolean {
@@ -88,14 +98,20 @@ export class GamesListComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  canStartGame(gameId: string): boolean {
+    let game = this.filteredGames.find(x => x.id === gameId);
+    if (game!.players.length < 2) {
+      return false;
+    }
+    if (game?.players[0] == this.authService.getUsername()) {
+      return true;
+    }
+    return false;
+  }
+
   get filteredGames(): IGame[] {
     return this.games.filter((game: IGame) =>
       game.roomName.toLocaleLowerCase().includes(this.listFilter.toLocaleLowerCase()) ||
       game.players.map(x => x.toLocaleLowerCase()).some(x => x.includes(this.listFilter.toLocaleLowerCase())))
   }
-
-  games: IGame[] = [];
-  errorMessage: string = '';
-  listFilter: string = '';
-  subscription!: Subscription;
 }

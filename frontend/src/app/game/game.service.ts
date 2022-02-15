@@ -28,6 +28,10 @@ export class GameService {
     return this.http.put(`${this.gamesUrl}/leave/${gameId}`, {})
   }
 
+  startGame(gameId: string): Observable<any> {
+    return this.http.put(`${this.gamesUrl}/start/${gameId}`, {})
+  }
+
   createGameRoom(): Observable<any> {
     return this.http.post(this.gamesUrl, { roomName: Math.random().toString(36).replace(/[^a-z]+/g, '') })
   }

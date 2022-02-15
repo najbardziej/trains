@@ -15,7 +15,7 @@ export class GamesService {
     @InjectModel(User.name) private userModel: Model<UserDocument>){}
 
   async findAll(): Promise<GameRoomEntity[]> {
-    return Promise.all((await this.gameModel.find().populate({ path: "players"}).exec())
+    return Promise.all((await this.gameModel.find().populate({ path: "players" }).exec())
       .map(async (game: GameDocument) => <GameRoomEntity>{
         id: game.id,
         roomName: game.roomName,
@@ -25,7 +25,7 @@ export class GamesService {
 
   async findOne(username: string): Promise<GameRoomEntity> {
     const user = await this.userModel.findOne({username: username});
-    const game = await this.gameModel.findOne({players: user}).populate({ path: "players"}).exec();
+    const game = await this.gameModel.findOne({players: user}).populate({ path: "players" }).exec();
     if (!game) {
       return null;
     }
@@ -46,15 +46,8 @@ export class GamesService {
     })).save();
   }
 
-  // async find(id: number): GameDocument {
-  //   const game: GameDto = this.games[id];
-  //   if (!game) throw new Error('No games found.');
-
-  //   return game;
-  // }
-
   async leave(id: string, username: string) {
-    const game = await this.gameModel.findById(id).populate({ path: "players"});
+    const game = await this.gameModel.findById(id).populate({ path: "players" });
     if (game) {
       if (!game.players.some(x => x.username === username)) {
         throw new ForbiddenException()
@@ -82,14 +75,27 @@ export class GamesService {
   }
 
   async delete(id: string, username: string) {
-    const game = await this.gameModel.findById(id).populate({ path: "players"});
+    const game = await this.gameModel.findById(id).populate({ path: "players" });
 
-    if (game.players.length == 0) 
+    if (!game.players || game.players.length == 0) 
       return this.gameModel.deleteOne({_id: game});
 
     if (game.players[0].username != username) 
       throw new ForbiddenException()
 
     return this.gameModel.deleteOne({_id: game});
+  }
+
+  async start(id: string, username: string) {
+    const game = await this.gameModel.findById(id).populate({ path: "players" });
+    if (game.players[0].username !== username) {
+      console.log(game.players[0].username, username)
+      throw new ForbiddenException()
+    }
+    if (game.players.length == 1) {
+      throw new ForbiddenException()
+    }
+
+    /// TODO: GAME START INITIALIZATION
   }
 }

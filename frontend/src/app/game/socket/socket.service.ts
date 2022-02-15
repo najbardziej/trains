@@ -14,8 +14,16 @@ export class SocketService {
     
   }
 
+
+
   identify(username: string) {
     this.socket.emit("identify", { username })
+  }
+
+  getRoomObservable(gameId: string): Observable<any> {
+    return this.socket.fromEvent(gameId).pipe(
+      tap(data => console.log("All", JSON.stringify(data))),
+    );
   }
 
   getGameRoomsObservable(): Observable<any> {

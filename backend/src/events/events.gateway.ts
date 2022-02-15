@@ -15,6 +15,7 @@ import { Server } from 'socket.io';
 import { GameRoomEntity } from 'src/entities/game-room.entity';
 import { GamesService } from 'src/games/games.service';
 import { Injectable, Inject, forwardRef, OnModuleInit } from '@nestjs/common';
+import { GameStateEntity } from 'src/entities/game-state.entity';
 
 @WebSocketGateway({
   cors: {
@@ -51,9 +52,9 @@ export class EventsGateway implements  OnGatewayDisconnect { //OnModuleInit,
     this.server.emit("game-rooms", gameRoomEntities);
   }
 
-  // emitGameState(gameId: string, gameState: GameStateEntity) {
-  //   this.server.emit(gameId, gameState);
-  // }
+  emitGameState(gameState: GameStateEntity) {
+    this.server.emit(gameState.id, gameState);
+  }
   
   @SubscribeMessage('identify')
   findAll(@MessageBody() data: any, @ConnectedSocket() client: any) {

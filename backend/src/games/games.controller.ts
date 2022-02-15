@@ -5,10 +5,11 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GameDto } from 'src/dto/game.dto';
 import { GameRoomEntity } from 'src/entities/game-room.entity';
-import { Schema } from 'mongoose';
+import { Schema, UpdateWriteOpResult } from 'mongoose';
 import { EventsGateway } from 'src/events/events.gateway';
 import { ModuleRef } from '@nestjs/core';
 import { Inject, forwardRef } from '@nestjs/common'
+import { GameStateEntity } from 'src/entities/game-state.entity';
 
 @ApiTags('games')
 @ApiBearerAuth()
@@ -26,17 +27,17 @@ export class GamesController {
     return this.gamesService.findAll();
   }
 
-  // @Get(':id')
-  // async find(@Param('id') id: number): Promise<GameDto> {
-  //   return this.gamesService.find(id);
-  // }
-
   @Post()
-  async create(@Body() gameDto: GameDto, @Req() req) {
-    await this.gamesService.create(gameDto, req.user.username);
+  async create(@Body() gameDto: GameDto, @Req() req): Promise<GameRoomEntity> {
+    let game = await this.gamesService.create(gameDto, req.user.username);
     this.eventsGateway.emitGameRooms(
       await this.gamesService.findAll()
     );
+    return <GameRoomEntity>{
+      id: game.id,
+      roomName: game.roomName,
+      players: game.players.map(x => x.username),
+    };
   }
 
   @Put("/join/:id")
@@ -53,6 +54,12 @@ export class GamesController {
     this.eventsGateway.emitGameRooms(
       await this.gamesService.findAll()
     );
+  }
+
+  @Put("/start/:id")
+  async start(@Param('id') id: string, @Req() req) {
+    await this.gamesService.start(id, req.user.username);
+    this.eventsGateway.emitGameState(<GameStateEntity>{ id: id });
   }
 
   @Delete(':id')

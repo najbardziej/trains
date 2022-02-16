@@ -23,14 +23,14 @@
     </thead>
 
     <tbody>
-      <tr *ngFor='let game of filteredGames'>
-        <th scope="row">{{game.roomName}}</th>
-        <td *ngFor='let player of game.players'>{{player}}</td>
-        <td *ngFor='let _ of [].constructor(5 - game.players.length)'></td>
+      <tr *ngFor='let gameRoom of filteredRooms'>
+        <th scope="row">{{gameRoom.roomName}}</th>
+        <td *ngFor='let player of gameRoom.players'>{{player}}</td>
+        <td *ngFor='let _ of [].constructor(5 - gameRoom.players.length)'></td>
         <td>
-          <button *ngIf="canStartGame(game.id)" type="button" class="btn btn-success btn-rounded mx-2" (click)="startGame(game.id)">Start game</button>
-          <button *ngIf="canJoinRoom(game.id)" type="button" class="btn btn-primary btn-rounded mx-2" (click)="joinGameRoom(game.id)">Join room</button>
-          <button *ngIf="canLeaveRoom(game.id)" type="button" class="btn btn-danger btn-rounded mx-2" (click)="leaveGameRoom(game.id)">Leave room</button>
+          <button *ngIf="canStartGame(gameRoom.id)" type="button" class="btn btn-success btn-rounded mx-2" (click)="startGame(gameRoom.id)">Start game</button>
+          <button *ngIf="canJoinRoom(gameRoom.id)" type="button" class="btn btn-primary btn-rounded mx-2" (click)="joinGameRoom(gameRoom.id)">Join room</button>
+          <button *ngIf="canLeaveRoom(gameRoom.id)" type="button" class="btn btn-danger btn-rounded mx-2" (click)="leaveGameRoom(gameRoom.id)">Leave room</button>
         </td>
       </tr>
     </tbody>

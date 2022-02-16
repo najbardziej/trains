@@ -4,10 +4,10 @@ import * as mongoose from 'mongoose';
 import { User } from './user.schema';
 import { Document } from 'mongoose';
 
-export type GameDocument = Game & Document;
+export type GameRoomDocument = GameRoom & Document;
 
 @Schema({versionKey: false})
-export class Game {
+export class GameRoom {
   @Prop()
   roomName: string;
 
@@ -18,4 +18,4 @@ export class Game {
   // owner: User;
 };
 
-export const GameSchema = SchemaFactory.createForClass(Game);
+export const GameRoomSchema = SchemaFactory.createForClass(GameRoom);

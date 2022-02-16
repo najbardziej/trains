@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
-import { GamesModule } from './games/games.module';
+import { LobbyModule } from './lobby/lobby.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EventsModule } from './events/events.module';
-import { forwardRef } from '@nestjs/common'
 
 @Module({
   imports: [
     EventsModule,
-    GamesModule,
+    LobbyModule,
     AuthModule,
     UsersModule,
     MongooseModule.forRootAsync({

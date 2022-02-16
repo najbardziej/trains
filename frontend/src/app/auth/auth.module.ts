@@ -12,7 +12,7 @@ import { LoginGuard } from './login-guard.service';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider } from 'angularx-social-login';
 import { environment } from 'src/environments/environment';
-import { GoogleLoginComponent } from './google/google-login.component';
+import { GoogleLoginComponent } from './login-form/google/google-login.component';
 
 @NgModule({
   declarations: [LoginFormComponent, GoogleLoginComponent],

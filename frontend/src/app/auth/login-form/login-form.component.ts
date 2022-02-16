@@ -113,7 +113,7 @@ export class LoginFormComponent implements OnInit {
   onComplete(): void {
     this.loginForm.reset();
     this.registerForm.reset();
-    this.router.navigate(['/games']);
+    this.router.navigate(['/lobby']);
   }
 
   async googleLogin(): Promise<void> {

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { GamesService } from './games.service';
-import { GamesController } from './games.controller';
+import { LobbyService } from './lobby.service';
+import { LobbyController } from './lobby.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Game, GameSchema } from 'src/schemas/game.schema';
+import { GameRoom, GameRoomSchema } from 'src/schemas/game-room.schema';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { EventsModule } from 'src/events/events.module';
 import { UsersModule } from 'src/users/users.module';
@@ -13,12 +13,12 @@ import { forwardRef } from '@nestjs/common'
     forwardRef(() => EventsModule),
     UsersModule,
     MongooseModule.forFeature([
-      { name: Game.name, schema: GameSchema},
-      { name: User.name, schema: UserSchema}
+      { name: GameRoom.name, schema: GameRoomSchema},
+      { name: User.name,     schema: UserSchema}
     ])
   ],
-  providers: [GamesService],
-  exports: [GamesService],
-  controllers: [GamesController]
+  providers: [LobbyService],
+  exports: [LobbyService],
+  controllers: [LobbyController]
 })
-export class GamesModule { }
+export class LobbyModule { }

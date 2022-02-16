@@ -10,7 +10,7 @@ export class LoginGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.auth.isAuthenticated()) {
-      this.router.navigate(['/games']);
+      this.router.navigate(['/lobby']);
     }
     return true;
   }

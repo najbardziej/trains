@@ -20,14 +20,14 @@ export class SocketService {
     this.socket.emit("identify", { username })
   }
 
-  getRoomObservable(gameId: string): Observable<any> {
-    return this.socket.fromEvent(gameId).pipe(
+  getRoomObservable(gameRoomId: string): Observable<any> {
+    return this.socket.fromEvent(gameRoomId).pipe(
       tap(data => console.log("All", JSON.stringify(data))),
     );
   }
 
   getGameRoomsObservable(): Observable<any> {
-    return this.socket.fromEvent("game-rooms").pipe(
+    return this.socket.fromEvent("lobby").pipe(
       tap(data => console.log("All", JSON.stringify(data))),
     );
   }

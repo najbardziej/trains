@@ -2,38 +2,38 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { IGame } from './game';
+import { GameRoom } from '../model/game-room';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GameService {
+export class LobbyService {
 
-  private gamesUrl = `${environment.apiUrl}/games`;
+  private lobbyUrl = `${environment.apiUrl}/lobby`;
 
   constructor(private http: HttpClient) { }
 
-  getGames(): Observable<IGame[]> {
-    return this.http.get<IGame[]>(this.gamesUrl).pipe(
+  getGameRooms(): Observable<GameRoom[]> {
+    return this.http.get<GameRoom[]>(this.lobbyUrl).pipe(
       catchError(this.handleError)
     );
   }
 
-  joinGameRoom(gameId: string): Observable<any> {
-    return this.http.put(`${this.gamesUrl}/join/${gameId}`, {})
+  joinGameRoom(gameRoomId: string): Observable<any> {
+    return this.http.put(`${this.lobbyUrl}/join/${gameRoomId}`, {})
   }
 
-  leaveGameRoom(gameId: string): Observable<any> {
-    return this.http.put(`${this.gamesUrl}/leave/${gameId}`, {})
+  leaveGameRoom(gameRoomId: string): Observable<any> {
+    return this.http.put(`${this.lobbyUrl}/leave/${gameRoomId}`, {})
   }
 
-  startGame(gameId: string): Observable<any> {
-    return this.http.put(`${this.gamesUrl}/start/${gameId}`, {})
+  startGame(gameRoomId: string): Observable<any> {
+    return this.http.put(`${this.lobbyUrl}/start/${gameRoomId}`, {})
   }
 
   createGameRoom(): Observable<any> {
-    return this.http.post(this.gamesUrl, { roomName: Math.random().toString(36).replace(/[^a-z]+/g, '') })
+    return this.http.post(this.lobbyUrl, { roomName: Math.random().toString(36).replace(/[^a-z]+/g, '') })
   }
 
   private handleError(err: HttpErrorResponse) {

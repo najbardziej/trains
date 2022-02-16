@@ -1,6 +1,6 @@
 import { IsString, IsOptional } from 'class-validator';
 
-export class GameDto {
+export class GameRoomDto {
   @IsString()
   readonly roomName: string;
 

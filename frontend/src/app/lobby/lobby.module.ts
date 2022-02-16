@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GamesListComponent } from './games-list/games-list.component';
+import { LobbyComponent } from './lobby.component';
 import { FormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -10,14 +10,14 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 
 @NgModule({
   declarations: [
-    GamesListComponent,
+    LobbyComponent,
   ],
   imports: [
     MdbFormsModule,
     CommonModule,
     FormsModule,
     RouterModule.forChild([
-      {path: 'games', component: GamesListComponent, canActivate: [AuthGuard] }
+      {path: 'lobby', component: LobbyComponent, canActivate: [AuthGuard] }
     ])
   ],
   providers: [
@@ -25,4 +25,4 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
     AuthGuard
   ]
 })
-export class GameModule { }
+export class LobbyModule { }

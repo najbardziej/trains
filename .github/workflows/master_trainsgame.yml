@@ -38,3 +38,9 @@ jobs:
 
     - name: Publish image
       run: docker compose push
+
+    - name: Call frontend image webhook
+      run: curl ${{ secrets.FRONTEND_AZURE_WEBHOOK }} -H "" -d ""
+
+    - name: Call backend image webhook
+      run: curl ${{ secrets.BACKEND_AZURE_WEBHOOK }} -H "" -d ""

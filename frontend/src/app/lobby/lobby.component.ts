@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { GameRoom } from '../model/game-room';
 import { LobbyService } from './lobby.service';
 import { SocketService } from '../socket/socket.service';
+import { Token } from '../model/token';
 
 @Component({
   templateUrl: './lobby.component.html',
@@ -39,7 +40,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-    this.gameSubscription.unsubscribe();
+    if (this.gameSubscription) {
+      this.gameSubscription.unsubscribe();
+    }
   }
 
   private createGameObservable(id: string) {
@@ -51,6 +54,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
   createGameRoom() {
     this.lobbyService.createGameRoom().subscribe((data: any) => {
       this.createGameObservable(data.id);
+    });
+  }
+
+  logout() {
+    this.authService.logout().subscribe(() => {
+      localStorage.clear();
+      this.router.navigate([`/`]);
     });
   }
 

@@ -80,6 +80,9 @@ export class LobbyService {
   async delete(id: string, username: string) {
     const gameRoom = await this.gameRoomModel.findById(id).populate({ path: "players" });
 
+    if (!gameRoom)
+      throw new ForbiddenException()
+
     if (!gameRoom.players || gameRoom.players.length == 0) 
       return this.gameRoomModel.deleteOne({_id: gameRoom});
 

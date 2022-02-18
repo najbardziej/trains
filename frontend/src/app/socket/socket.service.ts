@@ -14,8 +14,6 @@ export class SocketService {
     
   }
 
-
-
   identify(username: string) {
     this.socket.emit("identify", { username })
   }

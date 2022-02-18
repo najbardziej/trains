@@ -6,3 +6,12 @@
  
 @import '~mdb-angular-ui-kit/assets/scss/mdb.scss';
 @import '~mdb-ui-kit/css/mdb.min.css';
+
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+}

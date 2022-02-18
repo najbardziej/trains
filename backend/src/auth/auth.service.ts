@@ -56,25 +56,6 @@ export class AuthService {
     }
   }
 
-  async loginViaToken(token: TokenDto): Promise<any> {
-    try {
-      const username = this.jwtService.decode(token.accessToken)['username'];
-      const user = await this.usersService.findOne(username);
-
-      if (!await bcrypt.compare(token.refreshToken, user.refreshToken)) {
-        throw new UnauthorizedException();
-      }
-      const payload = { username: user.username }
-      return {
-        accessToken: this.jwtService.sign(payload),
-        refreshToken: await this.generateRefreshToken(user.username)
-      }
-    }
-    catch {
-      throw new UnauthorizedException();
-    }
-  }
-
   async refreshJwtToken(token: TokenDto): Promise<any> {
     try {
       const username = this.jwtService.decode(token.accessToken)['username'];

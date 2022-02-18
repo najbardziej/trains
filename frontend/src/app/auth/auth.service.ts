@@ -22,16 +22,14 @@ export class AuthService {
     return this.httpClient.post(`${this.baseUrl}/register`, user);
   }
 
-  loginViaToken(token: Token) {
-    return this.httpClient.post(`${this.baseUrl}/loginViaToken`, token);
+  logout(): Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}/logout`, this.getToken());
   }
 
   refreshToken() {
-    return this.httpClient.post(`${this.baseUrl}/refresh`, {
-      'accessToken': localStorage.getItem("accessToken"),
-      'refreshToken': localStorage.getItem("refreshToken")
-    }).pipe(tap((tokens: any) => {
-      localStorage.setItem("accessToken", tokens.accessToken);
+    return this.httpClient.post(`${this.baseUrl}/refresh`, this.getToken()).pipe(
+      tap((tokens: any) => {
+        localStorage.setItem("accessToken", tokens.accessToken);
     }));
   }
 
@@ -50,6 +48,13 @@ export class AuthService {
       return obj.username;
     } catch {
       return ""
+    }
+  }
+
+  getToken(): Token {
+    return <Token>{
+      accessToken: localStorage.getItem("accessToken"),
+      refreshToken: localStorage.getItem("refreshToken")
     }
   }
 }

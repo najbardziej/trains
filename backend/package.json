@@ -37,6 +37,7 @@
     "dotenv": "^8.2.0",
     "googleapis": "^92.0.0",
     "mongoose": "^5.12.5",
+    "node-fetch": "^2.6.7",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

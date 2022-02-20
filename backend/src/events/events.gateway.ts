@@ -10,7 +10,7 @@ import { Server } from 'socket.io';
 import { GameRoomEntity } from 'src/entities/game-room.entity';
 import { LobbyService } from 'src/lobby/lobby.service';
 import { Injectable } from '@nestjs/common';
-import { GameStateEntity } from 'src/entities/game-state.entity';
+import { GameEntity } from 'src/entities/game.entity';
 
 @WebSocketGateway({
   cors: {
@@ -30,9 +30,15 @@ export class EventsGateway implements  OnGatewayDisconnect { //OnModuleInit,
   async handleDisconnect(client: any) {
     const gameRoom = await this.lobbyService.findOne(client.username);
     if (gameRoom) {
-      await this.lobbyService.leave(gameRoom.id, client.username);
+      try { // Workaround for https://github.com/nestjs/cqrs/issues/409
+        await this.lobbyService.leave(gameRoom.id, client.username);
+      }
+      catch{}
       if (gameRoom.players.length == 1) {
-        await this.lobbyService.delete(gameRoom.id, client.username);
+        try { // Workaround for https://github.com/nestjs/cqrs/issues/409
+          await this.lobbyService.delete(gameRoom.id, client.username);
+        }
+        catch {}
       }
 
       this.emitLobby(await this.lobbyService.findAll());
@@ -43,8 +49,8 @@ export class EventsGateway implements  OnGatewayDisconnect { //OnModuleInit,
     this.server.emit("lobby", gameRoomEntities);
   }
 
-  emitGameState(gameState: GameStateEntity) {
-    this.server.emit(gameState.id, gameState);
+  emitGameStart(roomId, gameId) {
+    this.server.emit(roomId, gameId);
   }
   
   @SubscribeMessage('identify')

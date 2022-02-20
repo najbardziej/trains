@@ -5,7 +5,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GameRoomDto } from 'src/dto/game-room.dto';
 import { GameRoomEntity } from 'src/entities/game-room.entity';
 import { EventsGateway } from 'src/events/events.gateway';
-import { GameStateEntity } from 'src/entities/game-state.entity';
+import { GameEntity } from 'src/entities/game.entity';
 import { User } from 'src/schemas/user.schema';
 
 @ApiTags('lobby')
@@ -55,8 +55,8 @@ export class LobbyController {
 
   @Put("/start/:id")
   async start(@Param('id') id: string, @Req() req) {
-    await this.lobbyService.start(id, req.user.username);
-    this.eventsGateway.emitGameState(<GameStateEntity>{ id: id });
+    let gameId = await this.lobbyService.start(id, req.user.username);
+    this.eventsGateway.emitGameStart(id, gameId);
   }
 
   @Delete(':id')

@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
+import { GameModule } from './game/game.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { environment } from 'src/environments/environment';
     HttpClientModule,
     RouterModule.forRoot([]),
     LobbyModule,
+    GameModule,
     AuthModule,
     BrowserAnimationsModule,
     SocketIoModule.forRoot({ url: environment.apiUrl, options: {}})

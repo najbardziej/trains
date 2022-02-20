@@ -5,6 +5,7 @@ import { GameRoomDto } from '../dto/game-room.dto';
 import { GameRoom, GameRoomDocument } from 'src/schemas/game-room.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { GameRoomEntity } from 'src/entities/game-room.entity';
+import { GameService } from 'src/game/game.service';
 
 
 @Injectable()
@@ -12,7 +13,8 @@ export class LobbyService {
 
   constructor(
     @InjectModel(GameRoom.name) private gameRoomModel: Model<GameRoomDocument>,
-    @InjectModel(User.name)     private userModel:     Model<UserDocument>){}
+    @InjectModel(User.name)     private userModel:     Model<UserDocument>,
+    private readonly gameService: GameService){}
 
   async findAll(): Promise<GameRoomEntity[]> {
     return Promise.all((await this.gameRoomModel.find().populate({ path: "players" }).exec())
@@ -95,13 +97,14 @@ export class LobbyService {
   async start(id: string, username: string) {
     const gameRoom = await this.gameRoomModel.findById(id).populate({ path: "players" });
     if (gameRoom.players[0].username !== username) {
-      console.log(gameRoom.players[0].username, username)
       throw new ForbiddenException()
     }
     if (gameRoom.players.length == 1) {
       throw new ForbiddenException()
     }
 
-    /// TODO: GAME START INITIALIZATION
+    let game = await this.gameService.create(gameRoom.players);
+
+    return game.id;
   }
 }

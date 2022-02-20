@@ -46,8 +46,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   private createGameObservable(id: string) {
-    this.gameSubscription = this.socketService.getRoomObservable(id).subscribe((game: any) => {
-      this.router.navigate([`/game/${game.id}`]);
+    this.gameSubscription = this.socketService.getRoomObservable(id).subscribe((gameId: string) => {
+      this.router.navigate([`/game/${gameId}`]);
     })
   }
 

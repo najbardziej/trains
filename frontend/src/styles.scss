@@ -12,6 +12,12 @@ body, html {
   padding: 0;
 }
 
+.gradient-custom {
+  min-height: 100vh;
+
+  background: linear-gradient(to bottom right, rgba(255, 187, 51, 1), rgba(233, 30, 99, 1))
+}
+
 body {
   min-height: 100vh;
 }

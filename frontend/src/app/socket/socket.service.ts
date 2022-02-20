@@ -19,14 +19,10 @@ export class SocketService {
   }
 
   getRoomObservable(gameRoomId: string): Observable<any> {
-    return this.socket.fromEvent(gameRoomId).pipe(
-      tap(data => console.log("All", JSON.stringify(data))),
-    );
+    return this.socket.fromEvent(gameRoomId);
   }
 
   getGameRoomsObservable(): Observable<any> {
-    return this.socket.fromEvent("lobby").pipe(
-      tap(data => console.log("All", JSON.stringify(data))),
-    );
+    return this.socket.fromEvent("lobby");
   }
 }

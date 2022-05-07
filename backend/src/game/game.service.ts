@@ -28,7 +28,7 @@ export class GameService {
     }
     const entity: GameEntity = {
       id: game.id,
-      players: game.players,
+      players: game.players.map(x => x.username),
       currentPlayer: game.currentPlayer,
       cardPile: game.cardPile,
       availableCards: game.availableCards,
@@ -37,13 +37,13 @@ export class GameService {
     return entity;
   }
 
-  async create(players: User[]) {
+  async create(players: string[]) {
 
     const JOKER_COUNT = 14;
     const COMMON_CARD_COUNT = 12;
 
     let game: Game = {
-      players: this.arrayShuffle(players.map(x => x.username)),
+      players: this.arrayShuffle(players.map(x => ({ username: x }) )),
       currentPlayer: 0,
       cardPile: this.arrayShuffle([
         ...Array(JOKER_COUNT).fill(0),

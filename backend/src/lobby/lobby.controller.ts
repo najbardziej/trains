@@ -3,10 +3,10 @@ import { LobbyService } from './lobby.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GameRoomDto } from 'src/dto/game-room.dto';
-import { GameRoomEntity } from 'src/entities/game-room.entity';
 import { EventsGateway } from 'src/events/events.gateway';
 import { GameEntity } from 'src/entities/game.entity';
 import { User } from 'src/schemas/user.schema';
+import { GameRoom, GameRoomDocument } from 'src/schemas/game-room.schema';
 
 @ApiTags('lobby')
 @ApiBearerAuth()
@@ -20,21 +20,22 @@ export class LobbyController {
     ) { }
 
   @Get()
-  async index(): Promise<GameRoomEntity[]> {
+  async index(): Promise<GameRoom[]> {
     return this.lobbyService.findAll();
   }
 
   @Post()
-  async create(@Body() gameRoomDto: GameRoomDto, @Req() req): Promise<GameRoomEntity> {
+  async create(@Body() gameRoomDto: GameRoomDto, @Req() req): Promise<GameRoomDocument> {
     const gameRoom = await this.lobbyService.create(gameRoomDto, req.user.username);
     this.eventsGateway.emitLobby(
       await this.lobbyService.findAll()
     );
-    return <GameRoomEntity>{
-      id: gameRoom.id,
-      roomName: gameRoom.roomName,
-      players: gameRoom.players.map((x: User) => x.username),
-    };
+    // return <GameRoomEntity>{
+    //   id: gameRoom.id,
+    //   roomName: gameRoom.roomName,
+    //   players: gameRoom.players,
+    // };
+    return gameRoom;
   }
 
   @Put("/join/:id")

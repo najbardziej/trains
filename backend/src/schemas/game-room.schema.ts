@@ -11,8 +11,8 @@ export class GameRoom {
   @Prop()
   roomName: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User'}] })
-  players: User[];
+  @Prop([String])
+  players: string[];
 
   // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   // owner: User;

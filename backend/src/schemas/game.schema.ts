@@ -1,13 +1,18 @@
 
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export type GameDocument = Game & Document;
 
 @Schema({versionKey: false})
 export class Game {
-  @Prop([String])
-  players: string[];
+  
+  @Prop(raw([{
+    username: { type: String },
+    cards: { type: [Number] },
+    trains: { type: Number },
+  }]))
+  players: Record<string, any>[];
 
   @Prop()
   currentPlayer: number;

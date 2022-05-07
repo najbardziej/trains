@@ -27,7 +27,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.lobbyService.getGameRooms().subscribe(
-      ((gameRooms: GameRoom[]) => this.gameRooms = gameRooms),
+      ((gameRooms: GameRoom[]) => {this.gameRooms = gameRooms; console.log(gameRooms);}),
       (err) => console.error(err)
     );
 

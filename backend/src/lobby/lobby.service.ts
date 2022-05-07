@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { GameRoomDto } from '../dto/game-room.dto';
 import { GameRoom, GameRoomDocument } from 'src/schemas/game-room.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { GameRoomEntity } from 'src/entities/game-room.entity';
 import { GameService } from 'src/game/game.service';
 
 
@@ -16,27 +15,17 @@ export class LobbyService {
     @InjectModel(User.name)     private userModel:     Model<UserDocument>,
     private readonly gameService: GameService){}
 
-  async findAll(): Promise<GameRoomEntity[]> {
-    return Promise.all((await this.gameRoomModel.find().populate({ path: "players" }).exec())
-      .map(async (gameRoom: GameRoomDocument) => <GameRoomEntity>{
-        id: gameRoom.id,
-        roomName: gameRoom.roomName,
-        players: gameRoom.players.map(x => x.username),
-      }));
+  async findAll(): Promise<GameRoom[]> {
+    return (await this.gameRoomModel.find()).map(x => x.toObject({ virtuals: true }));
   }
 
-  async findOne(username: string): Promise<GameRoomEntity> {
+  async findOne(username: string): Promise<GameRoomDocument> {
     const user = await this.userModel.findOne({username: username});
-    const gameRoom = await this.gameRoomModel.findOne({players: user}).populate({ path: "players" }).exec();
+    const gameRoom = await this.gameRoomModel.findOne({players: user.username});
     if (!gameRoom) {
       return null;
     }
-    const entity: GameRoomEntity = {
-      id: gameRoom.id,
-      roomName: gameRoom.roomName,
-      players: gameRoom.players.map(x => x.username),
-    }
-    return entity;
+    return gameRoom;
   }
 
   async create(gameRoomDto: GameRoomDto, username:string) {
@@ -47,18 +36,18 @@ export class LobbyService {
 
     return (new this.gameRoomModel({
       roomName: gameRoomDto.roomName,
-      players: [ user ],
+      players: [ user.username ],
     })).save();
   }
 
   async leave(id: string, username: string) {
-    const gameRoom = await this.gameRoomModel.findById(id).populate({ path: "players" });
+    const gameRoom = await this.gameRoomModel.findById(id);
     if (gameRoom) {
-      if (!gameRoom.players.some(x => x.username === username)) {
+      if (!gameRoom.players.some(x => x === username)) {
         throw new ForbiddenException()
       }
   
-      const players = gameRoom.players.filter(x => x.username !== username);
+      const players = gameRoom.players.filter(x => x !== username);
 
       if (players.length == 0) {
         return this.gameRoomModel.deleteOne({_id: gameRoom});
@@ -69,18 +58,18 @@ export class LobbyService {
 
   async join(id: string, username: string) {
     const gameRoom = await this.gameRoomModel.findById(id);
-    if (gameRoom.players.some(x => x.username === username)) {
+    if (gameRoom.players.some(x => x === username)) {
       throw new ForbiddenException()
     }
     if (gameRoom.players.length == 5) {
       throw new ForbiddenException()
     }
     const user = await this.userModel.findOne({username: username});
-    return this.gameRoomModel.updateOne({_id: gameRoom}, {players: [...gameRoom.players, user]});
+    return this.gameRoomModel.updateOne({_id: gameRoom}, {players: [...gameRoom.players, user.username]});
   }
 
   async delete(id: string, username: string) {
-    const gameRoom = await this.gameRoomModel.findById(id).populate({ path: "players" });
+    const gameRoom = await this.gameRoomModel.findById(id);
 
     if (!gameRoom)
       throw new ForbiddenException()
@@ -88,15 +77,15 @@ export class LobbyService {
     if (!gameRoom.players || gameRoom.players.length == 0) 
       return this.gameRoomModel.deleteOne({_id: gameRoom});
 
-    if (gameRoom.players[0].username != username) 
+    if (gameRoom.players[0] != username) 
       throw new ForbiddenException()
 
     return this.gameRoomModel.deleteOne({_id: gameRoom});
   }
 
   async start(id: string, username: string) {
-    const gameRoom = await this.gameRoomModel.findById(id).populate({ path: "players" });
-    if (gameRoom.players[0].username !== username) {
+    const gameRoom = await this.gameRoomModel.findById(id);
+    if (gameRoom.players[0] !== username) {
       throw new ForbiddenException()
     }
     if (gameRoom.players.length == 1) {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { GameRoom } from '../model/game-room';
 import { LobbyService } from './lobby.service';
@@ -26,10 +26,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.lobbyService.getGameRooms().subscribe(
-      ((gameRooms: GameRoom[]) => {this.gameRooms = gameRooms; console.log(gameRooms);}),
-      (err) => console.error(err)
-    );
+    this.lobbyService.getGameRooms().subscribe({
+      next: ((gameRooms: GameRoom[]) => {this.gameRooms = gameRooms; console.log(gameRooms);}),
+      error: (err) => console.error(err)
+    });
 
     this.socketService.identify(this.authService.getUsername());
 
@@ -57,7 +57,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
     });
   }
 
-  logout() {
+  async logout() {
+    // get all rooms with player and leave them
+    this.gameRooms.filter(x => x.players.includes(this.authService.getUsername())).forEach(async x => {
+      await this.leaveGameRoom(x.id);
+    });
     this.authService.logout().subscribe(() => {
       localStorage.clear();
       this.router.navigate([`/`]);
@@ -70,8 +74,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
     });
   }
 
-  leaveGameRoom(gameRoomId: string) {
-    this.lobbyService.leaveGameRoom(gameRoomId).subscribe();
+  async leaveGameRoom(gameRoomId: string) {
+    await lastValueFrom(
+      this.lobbyService.leaveGameRoom(gameRoomId)
+    );
     if (this.gameSubscription) {
       this.gameSubscription.unsubscribe();
     }

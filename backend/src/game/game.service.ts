@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Game, GameDocument } from 'src/schemas/game.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { GameEntity } from '../entities/game.entity';
 
 @Injectable()
 export class GameService {
@@ -20,21 +19,13 @@ export class GameService {
       .map(({ value }) => value)
   }
 
-  async getForUser(id: string, username: string): Promise<GameEntity> {
+  async getForUser(id: string, username: string): Promise<Game> {
     //const user = await this.userModel.findOne({username: username});
     const game = await this.gameModel.findOne({ _id: id }).exec();
     if (!game) {
       return null;
     }
-    const entity: GameEntity = {
-      id: game.id,
-      players: game.players.map(x => x.username),
-      currentPlayer: game.currentPlayer,
-      cardPile: game.cardPile,
-      availableCards: game.availableCards,
-      discardPile: game.discardPile
-    }
-    return entity;
+    return game.toObject({ virtuals: true });
   }
 
   async create(players: string[]) {

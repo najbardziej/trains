@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { GameEntity } from 'src/entities/game.entity';
+import { Game } from 'src/schemas/game.schema';
 import { GameService } from './game.service';
 
 
@@ -16,7 +16,7 @@ export class GameController {
   ) {}
 
   @Get(':id')
-  async get(@Param('id') id: string, @Req() req): Promise<GameEntity> {
+  async get(@Param('id') id: string, @Req() req): Promise<Game> {
     return this.gameService.getForUser(id, req.user.username);
   }
 }

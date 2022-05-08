@@ -34,10 +34,12 @@ export class LobbyService {
     if (await this.findOne(username))
       throw new ForbiddenException();
 
-    return (new this.gameRoomModel({
+    const game = await (new this.gameRoomModel({
       roomName: gameRoomDto.roomName,
       players: [ user.username ],
     })).save();
+
+    return game.toObject({ virtuals: true });
   }
 
   async leave(id: string, username: string) {

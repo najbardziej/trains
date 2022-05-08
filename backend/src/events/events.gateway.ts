@@ -9,7 +9,6 @@ import {
 import { Server } from 'socket.io';
 import { LobbyService } from 'src/lobby/lobby.service';
 import { Injectable } from '@nestjs/common';
-import { GameEntity } from 'src/entities/game.entity';
 import { GameRoom } from 'src/schemas/game-room.schema';
 
 @WebSocketGateway({
@@ -36,16 +35,20 @@ export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
       if (gameRoom.players.length == 1) {
         await this.lobbyService.delete(gameRoom.id, client.username);
       }
-      this.emitLobby(await this.lobbyService.findAll());
+    }
+    catch { return; }
+    try { // Workaround for https://github.com/nestjs/cqrs/issues/409
+      await this.emitLobby();
     }
     catch { return; }
   }
 
-  emitLobby(gameRoomEntities: GameRoom[]) {
-    this.server.emit("lobby", gameRoomEntities);
+  async emitLobby() {
+    const gameRooms = await this.lobbyService.findAll()
+    this.server.emit("lobby", gameRooms);
   }
 
-  emitGameStart(roomId, gameId) {
+  emitGameStart(roomId: string, gameId: string) {
     this.server.emit(roomId, gameId);
   }
 

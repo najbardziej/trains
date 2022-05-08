@@ -1,1 +1,5 @@
-<p>game works!</p>
+<div class="game-container">
+  <div *ngFor="let card of game.availableCards" class="card">
+    <!-- [ngClass]="card.class" [ngStyle]="card.style" (click)="selectCard(card)" -->
+  </div>
+</div>

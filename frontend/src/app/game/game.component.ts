@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Game } from '../model/game';
 import { GameService } from './game.service';
 
 @Component({
@@ -14,12 +15,9 @@ export class GameComponent implements OnInit {
     private readonly gameService: GameService
   ) { }
 
-  private gameId: string = "";
+  public game: Game = this.route.snapshot.data.game;
 
   ngOnInit(): void {
-    this.gameId = this.route.snapshot.params.id;
 
-    this.gameService.getGameData(this.gameId).subscribe(x => console.log(x));
   }
-
 }

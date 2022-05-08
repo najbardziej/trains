@@ -14,6 +14,8 @@ RUN npm run build -- --configuration ${app_environment}
 
 FROM nginx:1.21.5-alpine
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=build /usr/src/app/dist/trains /usr/share/nginx/html
 
 EXPOSE 80

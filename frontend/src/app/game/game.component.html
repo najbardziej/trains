@@ -1,5 +1,25 @@
 <div class="game-container">
-  <div *ngFor="let card of game.availableCards" class="card">
-    <!-- [ngClass]="card.class" [ngStyle]="card.style" (click)="selectCard(card)" -->
+  <div class="card-picker">
+    <h3 class="card-picker__title">Draw cards: </h3>
+    <div class="card-picker__cards">
+      <div class="game-card game-card--unknown"></div>
+      <div class="game-card game-card--red"></div>
+      <div class="game-card game-card--purple"></div>
+      <div class="game-card game-card--orange"></div>
+      <div class="game-card game-card--yellow"></div>
+      <div class="game-card game-card--joker"></div>
+      <!-- <div *ngFor="let card of game.availableCards" class="game-card"> -->
+        <!-- [ngClass]="card.class" [ngStyle]="card.style" (click)="selectCard(card)" -->
+      <!-- </div> -->
+    </div>
+  </div>
+  <div class="gamemap">
+
+  </div>
+  <div class="missions">
+
+  </div>
+  <div class="player-cards">
+
   </div>
 </div>

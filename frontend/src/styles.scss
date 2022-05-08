@@ -7,6 +7,27 @@
 @import '~mdb-angular-ui-kit/assets/scss/mdb.scss';
 @import '~mdb-ui-kit/css/mdb.min.css';
 
+:root {
+  --color-red:  #B71C1C;
+  --color-blue:   #0D47A1;
+  --color-green:  #33691E;
+  --color-yellow: #FFD600;
+  --color-purple: #880E4F;
+  --color-orange: #E65100;
+  --color-white:  #EEEEEE;
+  --color-black:  #212121;
+  --color-cardback: url("/assets/oriental-tiles.png") center center;
+  --color-joker: linear-gradient(
+    20deg,
+    #E65100,
+    #FFD600,
+    #33691E,
+    #0D47A1,
+    #880E4F,
+    #B71C1C
+  );
+};
+
 body, html {
   margin: 0;
   padding: 0;
@@ -14,7 +35,6 @@ body, html {
 
 .gradient-custom {
   min-height: 100vh;
-
   background: linear-gradient(to bottom right, rgba(255, 187, 51, 1), rgba(233, 30, 99, 1))
 }
 

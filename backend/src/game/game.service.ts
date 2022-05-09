@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Game, GameDocument } from 'src/schemas/game.schema';
@@ -20,10 +20,13 @@ export class GameService {
   }
 
   async getForUser(id: string, username: string): Promise<Game> {
-    //const user = await this.userModel.findOne({username: username});
+    const user = await this.userModel.findOne({username: username});
     const game = await this.gameModel.findOne({ _id: id }).exec();
     if (!game) {
       return null;
+    }
+    if (!game.players.find(x => x.username == username)) {
+      throw new ForbiddenException();
     }
     return game.toObject({ virtuals: true });
   }
@@ -56,14 +59,14 @@ export class GameService {
     return (new this.gameModel(game)).save();
   }
 
-   reshufflePile(game: Game) {
+  private reshufflePile(game: Game) {
     if (game.cardPile.length == 0) {
       game.cardPile = this.arrayShuffle(game.discardPile);
       game.discardPile = [];
     }
   }
 
-  fillAvailableCards(game: Game) {
+  private fillAvailableCards(game: Game) {
     while (game.availableCards.length < 5) {
       this.reshufflePile(game);
       game.availableCards.push(game.cardPile.pop());
@@ -78,6 +81,33 @@ export class GameService {
         game.availableCards.push(game.cardPile.pop());
       }
     }
+  }
+
+  async drawCard(id: string, username: string, index: number) {
+    const user = await this.userModel.findOne({username: username});
+    const game = await this.gameModel.findOne({ _id: id }).exec();
+    if (!game) {
+      return null;
+    }
+    if (!game.players.find(x => x.username == username)) {
+      throw new ForbiddenException();
+    }
+    if (index > 4 || index < -1) {
+      throw new ForbiddenException();
+    }
+    let newCard;
+    if (index == -1) {
+      this.reshufflePile(game);
+      newCard = game.cardPile.shift();
+    }
+    else {
+      this.reshufflePile(game);
+      const replacementCard = game.cardPile.shift();
+      newCard = game.availableCards.splice(index, 1, replacementCard)[0];
+    }
+    game.players.find(x => x.username == username).cards.push(newCard);
+    this.fillAvailableCards(game);
+    return (new this.gameModel(game)).save();
   }
 
 }

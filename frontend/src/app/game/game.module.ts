@@ -6,9 +6,10 @@ import { AuthGuard } from '../auth/auth-guard.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { GameResolver } from './game.resolver';
+import { GameCardComponent } from './game-card/game-card.component';
 
 @NgModule({
-  declarations: [GameComponent],
+  declarations: [GameComponent, GameCardComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([

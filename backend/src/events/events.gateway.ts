@@ -10,6 +10,7 @@ import { Server } from 'socket.io';
 import { LobbyService } from 'src/lobby/lobby.service';
 import { Injectable } from '@nestjs/common';
 import { GameRoom } from 'src/schemas/game-room.schema';
+import { Game } from 'src/schemas/game.schema';
 
 @WebSocketGateway({
   cors: {
@@ -50,6 +51,10 @@ export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
 
   emitGameStart(roomId: string, gameId: string) {
     this.server.emit(roomId, gameId);
+  }
+
+  emitGame(game: Game) {
+    this.server.emit(`game-${game['id']}`, game);
   }
 
   @SubscribeMessage('identify')

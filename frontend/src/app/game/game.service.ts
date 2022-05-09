@@ -16,4 +16,8 @@ export class GameService {
   getGameData(id: string): Observable<Game> {
     return this.http.get<Game>(`${this.gameUrl}/${id}`);
   }
+
+  drawCard(id: string, index: number) {
+    return this.http.put(`${this.gameUrl}/${id}/get-card/${index}`, {});
+  }
 }

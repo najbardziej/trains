@@ -9,7 +9,7 @@
                 <mdb-tab title="Login">
                   <form [formGroup]="loginForm" (ngSubmit)="login()">
                     <div class="text-center m-3 mt-4">
-                      <trains-google-login buttonText="Sign in with Google" (click)="googleLogin()"></trains-google-login>
+                      <google-login buttonText="Sign in with Google" (click)="googleLogin()"></google-login>
                     </div>
                     <p class="text-center">or:</p>
 
@@ -38,7 +38,7 @@
                   <form [formGroup]="registerForm" (ngSubmit)="register()">
                     <div class="text-center mb-3">
                       <div class="text-center m-3 mt-4">
-                        <trains-google-login buttonText="Sign up with Google" (click)="googleLogin()"></trains-google-login>
+                        <google-login buttonText="Sign up with Google" (click)="googleLogin()"></google-login>
                       </div>
                     </div>
 

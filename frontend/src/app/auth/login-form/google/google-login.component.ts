@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'trains-google-login',
+  selector: 'google-login',
   template: `
   <button type="button" class="btn google-signin">
     <img src="https://developers.google.com/identity/images/g-logo.png" >

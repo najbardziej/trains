@@ -37,7 +37,11 @@ export class GameService {
     const COMMON_CARD_COUNT = 12;
 
     let game: Game = {
-      players: this.arrayShuffle(players.map(x => ({ username: x }) )),
+      players: this.arrayShuffle(players.map(x => ({ 
+        username: x,
+        trains: 40,
+        cards: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+      }))),
       currentPlayer: 0,
       cardPile: this.arrayShuffle([
         ...Array(JOKER_COUNT).fill(0),
@@ -105,7 +109,7 @@ export class GameService {
       const replacementCard = game.cardPile.shift();
       newCard = game.availableCards.splice(index, 1, replacementCard)[0];
     }
-    game.players.find(x => x.username == username).cards.push(newCard);
+    game.players.find(x => x.username == username).cards[newCard]++;
     this.fillAvailableCards(game);
     return (new this.gameModel(game)).save();
   }

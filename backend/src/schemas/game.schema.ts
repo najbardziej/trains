@@ -4,15 +4,22 @@ import { Document } from 'mongoose';
 
 export type GameDocument = Game & Document;
 
+@Schema({ versionKey: false, _id: false })
+export class Player {
+  @Prop()
+  username: string;
+
+  @Prop()
+  cards: number[];
+
+  @Prop()
+  trains: number;
+}
+
 @Schema({versionKey: false})
 export class Game {
-  
-  @Prop(raw([{
-    username: { type: String },
-    cards: { type: [Number] },
-    trains: { type: Number },
-  }]))
-  players: Record<string, any>[];
+  @Prop()
+  players: Player[];
 
   @Prop()
   currentPlayer: number;

@@ -7,11 +7,14 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../auth/auth.interceptor';
 import { GameResolver } from './game.resolver';
 import { GameCardComponent } from './game-card/game-card.component';
+import { PlayerCardComponent } from './player-card/player-card.component';
+import { AuthModule } from '../auth/auth.module';
 
 @NgModule({
-  declarations: [GameComponent, GameCardComponent],
+  declarations: [GameComponent, GameCardComponent, PlayerCardComponent],
   imports: [
     CommonModule,
+    AuthModule,
     RouterModule.forChild([
       {path: 'game/:id', component: GameComponent, canActivate: [AuthGuard], resolve: {game: GameResolver} },
     ])

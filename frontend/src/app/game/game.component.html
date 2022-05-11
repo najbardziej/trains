@@ -20,6 +20,10 @@
 
   </div>
   <div class="player-cards">
-
+    <player-card 
+      *ngFor="let playerCard of playerCards"
+      [quantity]="playerCard.quantity"
+      [card]="playerCard.card"
+      ></player-card>
   </div>
 </div>

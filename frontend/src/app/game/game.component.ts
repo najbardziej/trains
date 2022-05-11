@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 import { Game } from '../model/game';
 import { SocketService } from '../socket/socket.service';
 import { GameService } from './game.service';
@@ -16,10 +17,18 @@ export class GameComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly gameService: GameService,
     private readonly socketService: SocketService,
+    private readonly authService: AuthService,
   ) { }
 
-  public game: Game = this.route.snapshot.data.game;
   private subscription!: Subscription;
+
+  game: Game = this.route.snapshot.data.game;
+
+  get playerCards() {
+    return Array.from(this.game.players.find(
+      (p: any) => p.username === this.authService.getUsername()
+    ).cards.entries()).map(([i, x]: any) => ({ card: i, quantity: x }))
+  }
 
   ngOnInit(): void {
     this.subscription = this.socketService.getGameObservable(this.game.id)

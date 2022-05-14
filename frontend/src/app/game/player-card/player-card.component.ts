@@ -15,7 +15,6 @@ export class PlayerCardComponent implements OnInit {
   class: string = "game-card--unknown"
   
   ngOnInit(): void {
-    console.log(this.card, this.quantity);
     if (this.card >= 0) {
       this.class = [
         "game-card--joker",

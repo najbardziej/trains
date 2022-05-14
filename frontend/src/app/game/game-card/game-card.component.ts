@@ -33,7 +33,6 @@ export class GameCardComponent implements OnInit {
   }
 
   selectCard(): void {
-    console.log(this.index);
     this.cardSelected.emit(this.index);
   }
 

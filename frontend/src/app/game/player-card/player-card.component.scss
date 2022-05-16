@@ -2,34 +2,33 @@
   display: flex;
   height: 100%;
   align-items: center;
-  margin: 0 .5vw;
-}
 
-.game-card {
-  box-sizing: border-box;
-  margin: 5px;
-  width: 4vw;
-  height: 7vw;
-  border: .5vw solid #DDD;
-  border-radius: .5vw;
-  box-shadow: 0px 0px 15px rgba($color: #000, $alpha: .7);
+  .game-card {
+    box-sizing: border-box;
+    margin: 8px 4px 8px 8px;
+    width: 7vw;
+    height: 4vw;
+    border: .5vw solid #DDD;
+    border-radius: .5vw;
+    box-shadow: 0px 0px 15px rgba($color: #000, $alpha: .7);
+    
+    // transition: all 0.15s linear;
+    // 
+    // &:hover {
+    //   cursor: pointer;
+    //   filter: brightness(110%);
+    //   box-shadow: 5px 5px 25px rgba($color: #000, $alpha: .7);
+    // }
   
-  // transition: all 0.15s linear;
-  // 
-  // &:hover {
-  //   cursor: pointer;
-  //   filter: brightness(110%);
-  //   box-shadow: 5px 5px 25px rgba($color: #000, $alpha: .7);
-  // }
-
-  &--unknown { background: var(--color-cardback); }
-  &--red     { background: var(--color-red); }
-  &--blue    { background: var(--color-blue); }
-  &--green   { background: var(--color-green); }
-  &--yellow  { background: var(--color-yellow); }
-  &--purple  { background: var(--color-purple); }
-  &--orange  { background: var(--color-orange); }
-  &--white   { background: var(--color-white); }
-  &--black   { background: var(--color-black); }
-  &--joker   { background: var(--color-joker); }
+    &--unknown { background: var(--color-cardback); }
+    &--red     { background: var(--color-red); }
+    &--blue    { background: var(--color-blue); }
+    &--green   { background: var(--color-green); }
+    &--yellow  { background: var(--color-yellow); }
+    &--purple  { background: var(--color-purple); }
+    &--orange  { background: var(--color-orange); }
+    &--white   { background: var(--color-white); }
+    &--black   { background: var(--color-black); }
+    &--joker   { background: var(--color-joker); }
+  }
 }

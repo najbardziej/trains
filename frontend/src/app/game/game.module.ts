@@ -9,9 +9,11 @@ import { GameResolver } from './game.resolver';
 import { GameCardComponent } from './game-card/game-card.component';
 import { PlayerCardComponent } from './player-card/player-card.component';
 import { AuthModule } from '../auth/auth.module';
+import { GameMapComponent } from './game-map/game-map.component';
+import { PlayerInfoComponent } from './player-info/player-info.component';
 
 @NgModule({
-  declarations: [GameComponent, GameCardComponent, PlayerCardComponent],
+  declarations: [GameComponent, GameCardComponent, PlayerCardComponent, GameMapComponent, PlayerInfoComponent],
   imports: [
     CommonModule,
     AuthModule,

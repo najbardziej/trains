@@ -7,12 +7,19 @@
   min-height: 100vh;
   max-height: 100vh;
   display: grid;
+  // grid-template-areas: 
+  //   'card-picker  gamemap'
+  //   'missions     gamemap'
+  //   'missions     player-cards';
+  // grid-template-columns: 1fr 5fr;
+  // grid-template-rows: 2fr 3fr 1fr;
+
   grid-template-areas: 
-    'card-picker  gamemap'
-    'missions     gamemap'
-    'missions     player-cards';
-  grid-template-columns: 1fr 5fr;
-  grid-template-rows: 2fr 3fr 1fr;
+    'card-picker  gamemap       player-cards'
+    'missions     gamemap       player-cards'
+    'missions     player-info   player-cards';
+  grid-template-columns: 1fr 4.4fr 0.6fr;
+  grid-template-rows:    2fr   4fr 0.3fr;
 
   .card-picker {
     display: flex;
@@ -34,18 +41,9 @@
     }
   }
   
-  .gamemap {
+  game-map {
     grid-area: gamemap;
     position: relative;
-
-    img {
-      position: absolute;
-      top: 0;
-      right: 0;
-      object-fit: contain;
-      max-height: 100%;
-      max-width: 100%;
-    }
   }
   
   .missions {
@@ -56,10 +54,26 @@
   .player-cards {
     grid-area: player-cards;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 
     h3 {
-      margin-top: 12px;
+      margin-top: 10px;
+      text-align: center;
+    }
+  }
+
+  .player-info {
+    grid-area: player-info;
+    display: flex;
+    justify-content: space-evenly;
+    
+    player-info {
+      min-width: 15%;
+      margin: 0 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
     }
   }
 }

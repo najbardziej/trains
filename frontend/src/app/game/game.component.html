@@ -1,4 +1,5 @@
 <div class="game-container">
+
   <div class="card-picker">
     <h3 class="card-picker__title">Draw cards: </h3>
     <div class="card-picker__cards">
@@ -13,12 +14,13 @@
         ></game-card>
     </div>
   </div>
-  <div class="gamemap">
-    <img src="/assets/map_cities_edited.png" alt="map">
-  </div>
+
+  <game-map></game-map>
+
   <div class="missions">
 
   </div>
+
   <div class="player-cards">
     <h3>Your cards:</h3>
     <player-card 
@@ -27,4 +29,12 @@
       [card]="playerCard.card"
       ></player-card>
   </div>
+
+  <div class="player-info">
+    <player-info 
+      *ngFor="let player of game.players"
+      [player]="player"
+      ></player-info>
+  </div>
+
 </div>

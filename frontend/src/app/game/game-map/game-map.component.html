@@ -1,1 +1,4 @@
-<img src="/assets/map_cities_edited.png" alt="map" (click)="createTrain($event)">
+<img src="/assets/map_cities_edited.png" alt="map" >
+<div class="game-map__overlay" (window:resize)="rescaleMap()" (click)="createTrain($event)">
+
+</div>

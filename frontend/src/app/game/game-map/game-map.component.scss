@@ -4,3 +4,12 @@ img {
   height: 100%;
   width: 100%;
 }
+
+.game-map__overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: var(--map-height);
+  width: var(--map-width);
+  transform-origin: right top;
+}

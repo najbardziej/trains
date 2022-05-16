@@ -8,6 +8,8 @@
 @import '~mdb-ui-kit/css/mdb.min.css';
 
 :root {
+  --map-height: 921.633px;
+  --map-width: 1408px;
   --color-red:  #B71C1C;
   --color-blue:   #0D47A1;
   --color-green:  #33691E;
@@ -44,4 +46,14 @@ body {
 
 h3 {
   font-size: 1.6rem;
+}
+
+.train {
+  position: absolute;
+  width: 45px;
+  height: 15px;
+  background: gray;
+  box-shadow: 2px 2px 7px black, inset 2px 2px 5px rgba(255, 255, 255, 0.7);
+  border: 2px solid darkgray;
+  cursor: pointer;
 }

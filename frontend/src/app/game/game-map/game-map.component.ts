@@ -95,8 +95,8 @@ export class GameMapComponent implements OnInit {
     navigator.clipboard.writeText(JSON.stringify({
       "id": 0,
       "name": "",
-      "x": event.clientX + 9,
-      "y": event.clientY - 9
+      "x": event.clientX + 10,
+      "y": event.clientY - 10
     }) + ',');
   }
 }

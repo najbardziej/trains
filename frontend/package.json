@@ -41,7 +41,7 @@
     "@angular/compiler-cli": "~13.3.6",
     "@types/intrinsic-scale": "^3.0.0",
     "@types/jasmine": "~3.6.0",
-    "@types/node": "^17.0.13",
+    "@types/node": "^17.0.34",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~5.0.0",

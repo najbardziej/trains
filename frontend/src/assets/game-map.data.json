@@ -1,0 +1,31 @@
+{
+  "nodes": [
+    {"id":0,"name":"Warszawa","x":1082,"y":407},
+    {"id":1,"name":"Lódź","x":978,"y":456},
+    {"id":2,"name":"Poznań","x":811,"y":386},
+    {"id":3,"name":"Bydgoszcz","x":883,"y":307},
+    {"id":4,"name":"Białystok","x":1226,"y":306}
+  ],
+  "edges": [
+    {
+      "id": 0,
+      "nodes": [0, 1],
+      "length": 1
+    },
+    {
+      "id": 1,
+      "nodes": [0, 2],
+      "length": 5
+    },
+    {
+      "id": 2,
+      "nodes": [2, 3],
+      "length": 1
+    },
+    {
+      "id": 3,
+      "nodes": [0, 4],
+      "length": 3
+    }
+  ]
+}

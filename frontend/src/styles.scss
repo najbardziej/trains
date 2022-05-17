@@ -48,12 +48,31 @@ h3 {
   font-size: 1.6rem;
 }
 
-.train {
+.train, .node {
   position: absolute;
-  width: 45px;
-  height: 15px;
-  background: gray;
   box-shadow: 2px 2px 7px black, inset 2px 2px 5px rgba(255, 255, 255, 0.7);
+  background: gray;
   border: 2px solid darkgray;
   cursor: pointer;
+}
+
+.train {
+  width: 46px;
+  height: 16px;
+}
+
+.node {
+  border-radius: 9px;
+  width: 18px;
+  height: 18px;
+
+  // &:after {
+  //   width: 40px;
+  //   height: 40px;
+  //   border-radius: 20px;
+  //   border: 1px solid darkgray;
+  //   content: '';
+  //   display: block;
+  //   margin: -11px 0 0 -11px;
+  // }
 }

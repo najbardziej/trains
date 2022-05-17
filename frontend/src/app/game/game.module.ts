@@ -11,6 +11,7 @@ import { PlayerCardComponent } from './player-card/player-card.component';
 import { AuthModule } from '../auth/auth.module';
 import { GameMapComponent } from './game-map/game-map.component';
 import { PlayerInfoComponent } from './player-info/player-info.component';
+import { GameMapResolver } from './game-map/game-map.resolver';
 
 @NgModule({
   declarations: [GameComponent, GameCardComponent, PlayerCardComponent, GameMapComponent, PlayerInfoComponent],
@@ -18,7 +19,7 @@ import { PlayerInfoComponent } from './player-info/player-info.component';
     CommonModule,
     AuthModule,
     RouterModule.forChild([
-      {path: 'game/:id', component: GameComponent, canActivate: [AuthGuard], resolve: {game: GameResolver} },
+      {path: 'game/:id', component: GameComponent, canActivate: [AuthGuard], resolve: {game: GameResolver, gameMap: GameMapResolver} },
     ])
   ],
   providers: [

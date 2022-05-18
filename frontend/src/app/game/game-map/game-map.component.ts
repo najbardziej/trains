@@ -97,6 +97,6 @@ export class GameMapComponent implements OnInit {
       "name": "",
       "x": event.clientX + 10,
       "y": event.clientY - 10
-    }) + ',');
+    }));
   }
 }

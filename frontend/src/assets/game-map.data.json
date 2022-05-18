@@ -5,14 +5,69 @@
     {"id":2,"name":"Poznań","x":811,"y":386},
     {"id":3,"name":"Bydgoszcz","x":883,"y":307},
     {"id":4,"name":"Białystok","x":1226,"y":306},
-    {"id":5,"name":"Wrocław","x":817,"y":525}
+    {"id":5,"name":"Wrocław","x":817,"y":525},
+    {"id":6,"name":"Gdańsk","x":926,"y":166},
+    {"id":7,"name":"Olsztyn","x":1050,"y":233},
+    {"id":8,"name":"Szczecin","x":653,"y":272},
+    {"id":9,"name":"Katowice","x":951,"y":613},
+    {"id":10,"name":"Kraków","x":1015,"y":633},
+    {"id":11,"name":"Rzeszów","x":1154,"y":635},
+    {"id":12,"name":"Lublin","x":1188,"y":509},
+    {"id":13,"name":"Zakopane","x":1012,"y":712},
+    {"id":14,"name":"Koszalin","x":768,"y":186},
+    {"id":15,"name":"Suwałki","x":1211,"y":190},
+    {"id":16,"name":"Zielona Góra","x":715,"y":439},
+    
+    {"id":17,"name":"Copenhagen","x":518,"y":9},
+    {"id":18,"name":"Odense","x":377,"y":46},
+
+    {"id":19,"name":"Kaliningrad","x":1048,"y":127},
+
+    {"id":20,"name":"Vilnius","x":1369,"y":129},
+    {"id":21,"name":"Kaunas","x":1276,"y":103},
+    {"id":22,"name":"Klaipėda","x":1092,"y":10},
+
+    {"id":23,"name":"Grodno","x":1275,"y":242},
+    {"id":24,"name":"Brest","x":1272,"y":418},
+    {"id":25,"name":"Minsk","x":1520,"y":218},
+    {"id":26,"name":"Mogilev","x":1705,"y":218},
+    {"id":27,"name":"Viciebsk","x":1697,"y":68},
+
+    {"id":28,"name":"Lviv","x":1284,"y":656},
+    {"id":29,"name":"Lutsk","x":1371,"y":562},
+    {"id":30,"name":"Zhytomyr","x":1592,"y":613},
+    {"id":31,"name":"Vinnytsia","x":1581,"y":720},
+    {"id":32,"name":"Kiev","x":1718,"y":593}
   ],
   "edges": [
     { "id": 0, "nodes": [0, 1], "length": 1 },
     { "id": 1, "nodes": [0, 2], "length": 5 },
-    { "id": 2, "nodes": [2, 3], "length": 1 },
-    { "id": 3, "nodes": [0, 4], "length": 3 },
-    { "id": 4, "nodes": [5, 1], "length": 3 },
-    { "id": 5, "nodes": [5, 2], "length": 2 }
+    { "id": 2, "nodes": [0, 4], "length": 3 },
+    { "id": 3, "nodes": [0, 6], "length": 5 },
+    { "id": 4, "nodes": [0, 10], "length": 4 },
+    { "id": 5, "nodes": [0, 12], "length": 2 },
+    { "id": 6, "nodes": [1, 9], "length": 2 },
+    { "id": 7, "nodes": [2, 3], "length": 1 },
+    { "id": 8, "nodes": [2, 8], "length": 3 },
+    { "id": 9, "nodes": [3, 6], "length": 2 },
+    { "id": 10, "nodes": [5, 1], "length": 3 },
+    { "id": 11, "nodes": [5, 2], "length": 2 },
+    { "id": 12, "nodes": [5, 9], "length": 2 },
+    { "id": 13, "nodes": [6, 7], "length": 2 },
+    { "id": 14, "nodes": [6, 14], "length": 2 },
+    { "id": 15, "nodes": [8, 14], "length": 2 },
+    { "id": 16, "nodes": [9, 10], "length": 1 },
+    { "id": 17, "nodes": [10, 11], "length": 2 },
+    { "id": 18, "nodes": [10, 12], "length": 3 },
+    { "id": 19, "nodes": [10, 13], "length": 1 },
+    { "id": 20, "nodes": [11, 12], "length": 2 },
+    { "id": 21, "nodes": [11, 13], "length": 2 },
+
+    { "id": 22, "nodes": [6, 17], "length": 7 },
+    { "id": 23, "nodes": [17, 18], "length": 2 },
+
+    { "id": 24, "nodes": [20, 21], "length": 1 },
+    { "id": 25, "nodes": [21, 22], "length": 3 }
+
   ]
 }

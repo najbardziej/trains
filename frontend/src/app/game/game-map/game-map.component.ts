@@ -1,33 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { contain } from 'intrinsic-scale';
 
 const MAP_HEIGHT = 921.633;
 const MAP_WIDTH = 1408;
+const BOUNDING_MAP_RECT_RIGHT_FHD = 1728;
+const NODE_CREATION_MODE = false;
+const EDGE_CREATION_MODE = true;
 
 @Component({
   selector: 'game-map',
   templateUrl: './game-map.component.html',
   styleUrls: ['./game-map.component.scss']
 })
-export class GameMapComponent implements OnInit {
+export class GameMapComponent implements OnInit, AfterViewInit {
 
   constructor(private readonly route: ActivatedRoute) { }
 
+  private gameMap!: HTMLElement;
+  private gameMapOverlay!: HTMLElement;
+  private helperNodes: number[] = [];
+
+  mapData: any = this.route.snapshot.data.gameMap;
+
   ngOnInit(): void {
     this.gameMapOverlay = document.querySelector('.game-map__overlay') as HTMLElement;
+    this.gameMap = document.querySelector('game-map') as HTMLElement;
     this.createMapElements();
-    this.rescaleMap();
   }
 
-  private gameMapOverlay!: HTMLElement;
-  mapData: any = this.route.snapshot.data.gameMap;
+  ngAfterViewInit(): void {
+    this.rescaleMap();
+  }
 
   createMapElements() {
     // Create node elements
     this.mapData.nodes.forEach((node: any) => {
       this.gameMapOverlay.appendChild(
-        this.createNode(node.x, node.y)
+        this.createNode(node.x, node.y, node.id)
       );
     });
     // Create train elements
@@ -43,7 +53,7 @@ export class GameMapComponent implements OnInit {
 
       // Avoid collision with node 
       let theta = Math.atan2(startY - endY, startX - endX);
-      let [dx, dy] = [15 * Math.cos(theta), 15 * Math.sin(theta)];
+      let [dx, dy] = [16 * Math.cos(theta), 16 * Math.sin(theta)];
 
       [startX, endX] = [startX - dx, endX + dx];
       [startY, endY] = [startY - dy, endY + dy];
@@ -65,11 +75,27 @@ export class GameMapComponent implements OnInit {
     });
   }
 
-  private createNode(x: number, y: number) {
+  private createNode(x: number, y: number, id: string) {
     const node = document.createElement('div');
     node.classList.add("node");
     node.style.top = `${y}px`;
-    node.style.right = `${(this.gameMapOverlay.getBoundingClientRect().right - x)}px`;
+    node.style.right = `${(BOUNDING_MAP_RECT_RIGHT_FHD - x)}px`;
+    node.dataset.id = id;
+    if (EDGE_CREATION_MODE) {
+      node.addEventListener("click", (event) => {
+        this.helperNodes.push(+node.dataset.id!);
+        if (this.helperNodes.length === 1) {
+          return;
+        }
+
+        navigator.clipboard.writeText(JSON.stringify({
+          "id": 0,
+          "nodes": this.helperNodes,
+          "length": 1
+        }));
+        this.helperNodes = [];
+      });
+    }
     return node;
   }
 
@@ -77,21 +103,24 @@ export class GameMapComponent implements OnInit {
     const train = document.createElement('div');
     train.classList.add("train");
     train.style.top = `${y}px`;
-    train.style.right = `${(this.gameMapOverlay.getBoundingClientRect().right - x)}px`;
+    train.style.right = `${(BOUNDING_MAP_RECT_RIGHT_FHD - x)}px`;
     train.style.transform = `rotate(${angle}rad)`;
     return train;
   }
 
   rescaleMap() {
-    const gameMap = document.querySelector('game-map');
-    const gameMapWidth = gameMap!.getBoundingClientRect().width;
-    const gameMapHeight = gameMap!.getBoundingClientRect().height;
+    const gameMapWidth = this.gameMap.getBoundingClientRect().width;
+    const gameMapHeight = this.gameMap.getBoundingClientRect().height;
     let { width, height, x, y } = contain(gameMapWidth, gameMapHeight, MAP_WIDTH, MAP_HEIGHT);
     const scale = width / MAP_WIDTH;
     this.gameMapOverlay.style.transform = `scale(${scale})`;
   }
 
   onClick(event: any) {
+    if (!NODE_CREATION_MODE) {
+      return;
+    }
+
     navigator.clipboard.writeText(JSON.stringify({
       "id": 0,
       "name": "",

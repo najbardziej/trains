@@ -62,6 +62,16 @@
     { "id": 19, "nodes": [10, 13], "length": 1 },
     { "id": 20, "nodes": [11, 12], "length": 2 },
     { "id": 21, "nodes": [11, 13], "length": 2 },
+    { "id": 0, "nodes": [16, 2], "length": 1 },
+    { "id": 0, "nodes": [5, 16], "length": 2 },
+    { "id": 0, "nodes": [16, 8], "length": 2 },
+    { "id": 0, "nodes": [12, 4], "length": 3 },
+    { "id": 0, "nodes": [15, 4], "length": 1 },
+    { "id": 0, "nodes": [7, 15], "length": 2 },
+    { "id": 0, "nodes": [7, 4], "length": 3 },
+    { "id": 0, "nodes": [14, 3], "length": 2 },
+    
+    { "id": 0, "nodes": [7,19], "length": 1 },
 
     { "id": 22, "nodes": [6, 17], "length": 7 },
     { "id": 23, "nodes": [17, 18], "length": 2 },

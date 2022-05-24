@@ -7,6 +7,9 @@ const MAP_WIDTH = 1408;
 const BOUNDING_MAP_RECT_RIGHT_FHD = 1728;
 const NODE_CREATION_MODE = false;
 const EDGE_CREATION_MODE = true;
+const TRAIN_WIDTH = 44;
+const TRAIN_HEIGHT = 16;
+const NODE_RADIUS = 9;
 
 @Component({
   selector: 'game-map',
@@ -48,12 +51,17 @@ export class GameMapComponent implements OnInit, AfterViewInit {
         this.mapData.nodes.filter((node: any) => node.id === edge.nodes[1])[0]
       ];
       // Move line to center
-      let [startX, endX] = [start.x - 10, end.x - 10];
-      let [startY, endY] = [start.y + 10, end.y + 10];
+      let [startX, endX] = [start.x - NODE_RADIUS, end.x - NODE_RADIUS];
+      let [startY, endY] = [start.y + NODE_RADIUS, end.y + NODE_RADIUS];
 
       // Avoid collision with node 
+      let length = Math.hypot(endX - startX, endY - startY);
+      const minNodeSpacing = 14;
+      let trainSpacing = (length - (minNodeSpacing * 2)) / edge.length - TRAIN_WIDTH;
+      let spacing = Math.max(trainSpacing, minNodeSpacing);
+      console.log(trainSpacing, spacing, start.name, end.name);
       let theta = Math.atan2(startY - endY, startX - endX);
-      let [dx, dy] = [16 * Math.cos(theta), 16 * Math.sin(theta)];
+      let [dx, dy] = [spacing * Math.cos(theta), spacing * Math.sin(theta)];
 
       [startX, endX] = [startX - dx, endX + dx];
       [startY, endY] = [startY - dy, endY + dy];
@@ -67,7 +75,7 @@ export class GameMapComponent implements OnInit, AfterViewInit {
 
       for (let i = 0; i < edge.length; i++) {
         this.gameMapOverlay.appendChild(
-          this.createTrain(x + 25, y - 10, theta)
+          this.createTrain(x + (TRAIN_WIDTH / 2), y - (TRAIN_HEIGHT / 2), theta)
         );
         x += dx * 2;
         y += dy * 2;
@@ -124,8 +132,8 @@ export class GameMapComponent implements OnInit, AfterViewInit {
     navigator.clipboard.writeText(JSON.stringify({
       "id": 0,
       "name": "",
-      "x": event.clientX + 10,
-      "y": event.clientY - 10
+      "x": event.clientX + NODE_RADIUS,
+      "y": event.clientY - NODE_RADIUS
     }));
   }
 }

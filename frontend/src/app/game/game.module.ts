@@ -19,7 +19,12 @@ import { GameMapResolver } from './game-map/game-map.resolver';
     CommonModule,
     AuthModule,
     RouterModule.forChild([
-      {path: 'game/:id', component: GameComponent, canActivate: [AuthGuard], resolve: {game: GameResolver, gameMap: GameMapResolver} },
+      {
+        path: 'game/:id', 
+        component: GameComponent, 
+        canActivate: [AuthGuard], 
+        resolve: { game: GameResolver, gameMap: GameMapResolver }
+      },
     ])
   ],
   providers: [

@@ -20,8 +20,4 @@ export class GameService {
   drawCard(id: string, index: number) {
     return this.http.put(`${this.gameUrl}/${id}/get-card/${index}`, {});
   }
-
-  getGameMapData(): Observable<any> {
-    return this.http.get('assets/game-map.data.json');
-  }
 }

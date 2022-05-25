@@ -60,7 +60,7 @@ export class GameMapComponent implements OnInit, AfterViewInit {
       let length = Math.hypot(endX - startX, endY - startY);
       let trainSpacing = (length - (MIN_NODE_SPACING * 2)) / edge.length - TRAIN_WIDTH;
       let spacing = Math.max(trainSpacing, MIN_NODE_SPACING);
-      console.log(trainSpacing, spacing, start.name, end.name);
+      // console.log(trainSpacing, spacing, start.name, end.name);
       let theta = Math.atan2(startY - endY, startX - endX);
       let [dx, dy] = [spacing * Math.cos(theta), spacing * Math.sin(theta)];
 

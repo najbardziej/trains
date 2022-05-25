@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards, ForbiddenException } from '@nestjs/common';
 import { LobbyService } from './lobby.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GameRoomDto } from 'src/dto/game-room.dto';
 import { EventsGateway } from 'src/events/events.gateway';
 import { GameRoom } from 'src/schemas/game-room.schema';
+import { GameService } from 'src/game/game.service';
+import { GameMapService } from 'src/game/game-map/game-map.service';
 
 @ApiTags('lobby')
 @ApiBearerAuth()
@@ -13,7 +15,9 @@ import { GameRoom } from 'src/schemas/game-room.schema';
 export class LobbyController {
 
   constructor(
-    private readonly lobbyService: LobbyService, 
+    private readonly lobbyService: LobbyService,
+    private readonly gameService: GameService,
+    private readonly gameMapService: GameMapService,
     private readonly eventsGateway: EventsGateway, 
     ) { }
 
@@ -43,8 +47,16 @@ export class LobbyController {
 
   @Put("/start/:id")
   async start(@Param('id') id: string, @Req() req) {
-    let gameId = await this.lobbyService.start(id, req.user.username);
-    this.eventsGateway.emitGameStart(id, gameId);
+    const gameRoom = await this.lobbyService.findOne(req.user.username);
+    if (gameRoom.players[0] !== req.user.username) {
+      throw new ForbiddenException()
+    }
+    if (gameRoom.players.length === 1) {
+      throw new ForbiddenException()
+    }
+    let game = await this.gameService.create(gameRoom.players);
+    await this.gameMapService.create(game.id);
+    this.eventsGateway.emitGameStart(id, game.id);
     await this.lobbyService.delete(id, req.user.username);
     await this.eventsGateway.emitLobby();
   }

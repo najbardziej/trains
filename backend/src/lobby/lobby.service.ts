@@ -85,17 +85,4 @@ export class LobbyService {
     return this.gameRoomModel.deleteOne({_id: gameRoom});
   }
 
-  async start(id: string, username: string) {
-    const gameRoom = await this.gameRoomModel.findById(id);
-    if (gameRoom.players[0] !== username) {
-      throw new ForbiddenException()
-    }
-    if (gameRoom.players.length == 1) {
-      throw new ForbiddenException()
-    }
-
-    let game = await this.gameService.create(gameRoom.players);
-
-    return game.id;
-  }
 }

@@ -6,6 +6,9 @@ import { User, UserSchema } from 'src/schemas/user.schema';
 import { UsersModule } from 'src/users/users.module';
 import { GameController } from './game.controller';
 import { GameService } from './game.service';
+import { GameMapService } from './game-map/game-map.service';
+import { GameMapController } from './game-map/game-map.controller';
+import { GameMap, GameMapSchema } from 'src/schemas/game-map.schema';
 
 @Module({
   imports: [
@@ -13,11 +16,12 @@ import { GameService } from './game.service';
     EventsModule,
     MongooseModule.forFeature([
       { name: Game.name, schema: GameSchema},
-      { name: User.name, schema: UserSchema}
+      { name: User.name, schema: UserSchema},
+      { name: GameMap.name, schema: GameMapSchema},
     ])
   ],
-  controllers: [GameController],
-  providers: [GameService],
-  exports: [GameService]
+  controllers: [GameController, GameMapController],
+  providers: [GameService, GameMapService],
+  exports: [GameService, GameMapService]
 })
 export class GameModule {}

@@ -8,8 +8,7 @@ import { User, UserDocument } from 'src/schemas/user.schema';
 export class GameService {
 
   constructor(
-    @InjectModel(Game.name) private gameModel: Model<GameDocument>,
-    @InjectModel(User.name) private userModel: Model<UserDocument>
+    @InjectModel(Game.name) private gameModel: Model<GameDocument>
   ){}
 
   private arrayShuffle(array: Array<any>) {
@@ -20,7 +19,6 @@ export class GameService {
   }
 
   async getForUser(id: string, username: string): Promise<Game> {
-    const user = await this.userModel.findOne({username: username});
     const game = await this.gameModel.findOne({ _id: id }).exec();
     if (!game) {
       return null;
@@ -88,7 +86,6 @@ export class GameService {
   }
 
   async drawCard(id: string, username: string, index: number) {
-    const user = await this.userModel.findOne({username: username});
     const game = await this.gameModel.findOne({ _id: id }).exec();
     if (!game) {
       return null;

@@ -1,17 +1,17 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from "@angular/router";
 import { Observable } from "rxjs";
-import { GameService } from "../game.service";
+import { GameMapService } from "./game-map.service";
 
 
 @Injectable({ providedIn: 'root' })
 export class GameMapResolver implements Resolve<any> {
-  constructor(private service: GameService) {}
+  constructor(private gameMapService: GameMapService) {}
 
   resolve(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<any> {
-    return this.service.getGameMapData();
+    return this.gameMapService.getGameMapData(route.paramMap.get('id') || '');
   }
 }

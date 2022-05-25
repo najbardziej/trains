@@ -20,6 +20,7 @@
   --color-orange: #E65100;
   --color-white:  #EEEEEE;
   --color-black:  #212121;
+  --color-gray:  gray;
   --color-cardback: url("/assets/oriental-tiles.png") center center;
   --color-joker: linear-gradient(
     20deg,
@@ -31,6 +32,18 @@
     #B71C1C
   );
 };
+
+[data-color="-1"] { background: var(--color-cardback); }
+[data-color="0"] { background: var(--color-joker); }
+[data-color="1"] { background: var(--color-red); }
+[data-color="2"] { background: var(--color-blue); }
+[data-color="3"] { background: var(--color-green); }
+[data-color="4"] { background: var(--color-yellow); }
+[data-color="5"] { background: var(--color-purple); }
+[data-color="6"] { background: var(--color-orange); }
+[data-color="7"] { background: var(--color-white); }
+[data-color="8"] { background: var(--color-black); }
+[data-color="9"] { background: var(--color-gray); }
 
 body, html {
   margin: 0;
@@ -52,9 +65,8 @@ h3 {
 
 .train, .node {
   position: absolute;
-  box-shadow: 2px 2px 7px black, inset 2px 2px 5px rgba(255, 255, 255, 0.7);
-  background: gray;
-  border: 2px solid darkgray;
+  box-shadow: 2px 2px 7px black, inset 2px 2px 6px rgba(255, 255, 255, 0.75);
+  // border: 2px solid darkgray;
   cursor: pointer;
   transition: all 0.15s linear;
 }
@@ -72,6 +84,7 @@ h3 {
   border-radius: 9px;
   width: 18px;
   height: 18px;
+  background: gray;
 
   &:after {
     text-shadow: 2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;

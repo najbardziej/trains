@@ -11,23 +11,7 @@ export class PlayerCardComponent implements OnInit {
 
   @Input() card: number = -1;
   @Input() quantity: number = 0;
-
-  class: string = "game-card--unknown"
+ 
+  ngOnInit(): void { }
   
-  ngOnInit(): void {
-    if (this.card >= 0) {
-      this.class = [
-        "game-card--joker",
-        "game-card--red",   
-        "game-card--blue",  
-        "game-card--green", 
-        "game-card--yellow",
-        "game-card--purple",
-        "game-card--orange",
-        "game-card--white", 
-        "game-card--black",
-      ][this.card];
-    }
-  }
-
 }

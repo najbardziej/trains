@@ -79,7 +79,11 @@ export class GameMapComponent implements OnInit, AfterViewInit {
 
       for (let i = 0; i < edge.length; i++) {
         routeContainer.appendChild(
-          this.createTrain(x + (TRAIN_WIDTH / 2), y - (TRAIN_HEIGHT / 2), theta)
+          this.createTrain(
+            x + (TRAIN_WIDTH / 2), 
+            y - (TRAIN_HEIGHT / 2), 
+            edge.color,
+            theta)
         );
         x += dx * 2;
         y += dy * 2;
@@ -120,9 +124,10 @@ export class GameMapComponent implements OnInit, AfterViewInit {
     return node;
   }
 
-  private createTrain(x: number, y: number, angle: number = 0) {
+  private createTrain(x: number, y: number, color: number = 9, angle: number = 0) {
     const train = document.createElement('div');
     train.classList.add("train");
+    train.dataset.color = color.toString();
     train.style.top = `${y}px`;
     train.style.right = `${(BOUNDING_MAP_RECT_RIGHT_FHD - x)}px`;
     train.style.transform = `rotate(${angle}rad)`;

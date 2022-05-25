@@ -13,15 +13,4 @@
     filter: brightness(110%);
     box-shadow: 5px 5px 25px rgba($color: #000, $alpha: .7);
   }
-
-  &--unknown { background: var(--color-cardback); }
-  &--red     { background: var(--color-red); }
-  &--blue    { background: var(--color-blue); }
-  &--green   { background: var(--color-green); }
-  &--yellow  { background: var(--color-yellow); }
-  &--purple  { background: var(--color-purple); }
-  &--orange  { background: var(--color-orange); }
-  &--white   { background: var(--color-white); }
-  &--black   { background: var(--color-black); }
-  &--joker   { background: var(--color-joker); }
 }

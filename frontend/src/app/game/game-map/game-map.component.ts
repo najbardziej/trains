@@ -6,7 +6,9 @@ const MAP_HEIGHT = 921.633;
 const MAP_WIDTH = 1408;
 const BOUNDING_MAP_RECT_RIGHT_FHD = 1728;
 const NODE_CREATION_MODE = false;
-const EDGE_CREATION_MODE = true;
+const EDGE_CREATION_MODE = false;
+
+const MIN_NODE_SPACING = 14;
 const TRAIN_WIDTH = 44;
 const TRAIN_HEIGHT = 16;
 const NODE_RADIUS = 9;
@@ -56,9 +58,8 @@ export class GameMapComponent implements OnInit, AfterViewInit {
 
       // Avoid collision with node 
       let length = Math.hypot(endX - startX, endY - startY);
-      const minNodeSpacing = 14;
-      let trainSpacing = (length - (minNodeSpacing * 2)) / edge.length - TRAIN_WIDTH;
-      let spacing = Math.max(trainSpacing, minNodeSpacing);
+      let trainSpacing = (length - (MIN_NODE_SPACING * 2)) / edge.length - TRAIN_WIDTH;
+      let spacing = Math.max(trainSpacing, MIN_NODE_SPACING);
       console.log(trainSpacing, spacing, start.name, end.name);
       let theta = Math.atan2(startY - endY, startX - endX);
       let [dx, dy] = [spacing * Math.cos(theta), spacing * Math.sin(theta)];
@@ -73,13 +74,18 @@ export class GameMapComponent implements OnInit, AfterViewInit {
       ];
       let [x, y] = [startX + dx, startY + dy];
 
+      let routeContainer = document.createElement('div');
+      routeContainer.classList.add("route-container");
+
       for (let i = 0; i < edge.length; i++) {
-        this.gameMapOverlay.appendChild(
+        routeContainer.appendChild(
           this.createTrain(x + (TRAIN_WIDTH / 2), y - (TRAIN_HEIGHT / 2), theta)
         );
         x += dx * 2;
         y += dy * 2;
       }
+
+      this.gameMapOverlay.appendChild(routeContainer);
     });
   }
 
@@ -95,11 +101,18 @@ export class GameMapComponent implements OnInit, AfterViewInit {
         if (this.helperNodes.length === 1) {
           return;
         }
+        
+        let [start, end] = [
+          this.mapData.nodes.filter((node: any) => node.id === this.helperNodes[0])[0],
+          this.mapData.nodes.filter((node: any) => node.id === this.helperNodes[1])[0]
+        ];        
+        
+        let length = Math.hypot(start.x - end.x, start.y - end.y);
 
         navigator.clipboard.writeText(JSON.stringify({
           "id": 0,
           "nodes": this.helperNodes,
-          "length": 1
+          "length": Math.floor((length - MIN_NODE_SPACING * 2) / (TRAIN_WIDTH + 4))
         }));
         this.helperNodes = [];
       });

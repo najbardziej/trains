@@ -7,6 +7,8 @@
 @import '~mdb-angular-ui-kit/assets/scss/mdb.scss';
 @import '~mdb-ui-kit/css/mdb.min.css';
 
+@import url('https://fonts.googleapis.com/css2?family=Stint+Ultra+Condensed&display=swap');
+
 :root {
   --map-height: 921.633px;
   --map-width: 1408px;
@@ -54,6 +56,7 @@ h3 {
   background: gray;
   border: 2px solid darkgray;
   cursor: pointer;
+  transition: all 0.15s linear;
 }
 
 .train {
@@ -61,18 +64,24 @@ h3 {
   height: 16px;
 }
 
+.route-container:hover .train {
+  filter: brightness(115%);
+}
+
 .node {
   border-radius: 9px;
   width: 18px;
   height: 18px;
 
-  // &:after {
-  //   width: 40px;
-  //   height: 40px;
-  //   border-radius: 20px;
-  //   border: 1px solid darkgray;
-  //   content: '';
-  //   display: block;
-  //   margin: -11px 0 0 -11px;
-  // }
+  &:after {
+    text-shadow: 2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;
+    color: white;
+    font-family: 'Stint Ultra Condensed';
+    font-size: 1.7rem;
+    content: 'Zielona Góra';
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    // display: block;
+    display: none;
+  }
 }

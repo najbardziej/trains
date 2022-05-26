@@ -86,15 +86,17 @@ h3 {
   height: 18px;
   background: gray;
 
-  &:after {
+  &__label {
     text-shadow: 2px 2px 0 black, -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black;
     color: white;
     font-family: 'Stint Ultra Condensed';
     font-size: 1.7rem;
-    content: 'Zielona Góra';
     letter-spacing: -0.5px;
     white-space: nowrap;
-    // display: block;
-    display: none;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    z-index: -5;
+    display: block;
   }
 }

@@ -5,13 +5,14 @@ import { contain } from 'intrinsic-scale';
 const MAP_HEIGHT = 921.633;
 const MAP_WIDTH = 1408;
 const BOUNDING_MAP_RECT_RIGHT_FHD = 1728;
-const NODE_CREATION_MODE = false;
-const EDGE_CREATION_MODE = false;
 
 const MIN_NODE_SPACING = 14;
 const TRAIN_WIDTH = 44;
 const TRAIN_HEIGHT = 16;
 const NODE_RADIUS = 9;
+
+const NODE_CREATION_MODE = false;
+const EDGE_CREATION_MODE = false;
 
 @Component({
   selector: 'game-map',
@@ -42,7 +43,7 @@ export class GameMapComponent implements OnInit, AfterViewInit {
     // Create node elements
     this.mapData.nodes.forEach((node: any) => {
       this.gameMapOverlay.appendChild(
-        this.createNode(node.x, node.y, node.id)
+        this.createNode(node.x, node.y, node.id, node.name)
       );
     });
     // Create train elements
@@ -93,12 +94,18 @@ export class GameMapComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private createNode(x: number, y: number, id: string) {
+  private createNode(x: number, y: number, id: string, name: string) {
     const node = document.createElement('div');
     node.classList.add("node");
     node.style.top = `${y}px`;
     node.style.right = `${(BOUNDING_MAP_RECT_RIGHT_FHD - x)}px`;
     node.dataset.id = id;
+
+    const nodeLabel = document.createElement('div');
+    nodeLabel.classList.add("node__label");
+    nodeLabel.textContent = name;
+    node.appendChild(nodeLabel);
+
     if (EDGE_CREATION_MODE) {
       node.addEventListener("click", (event) => {
         this.helperNodes.push(+node.dataset.id!);

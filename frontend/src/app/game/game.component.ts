@@ -54,7 +54,7 @@ export class GameComponent implements OnInit {
   onRouteSelected(route: any) {
     if (route.color == COLOR.GRAY) {
       this.selectedRoute = route;
-      this.toastrService.warning("Select color ->", "", { timeOut: 10000 });
+      this.toastrService.warning("Select color ->", "", { timeOut: 10000,  });
       return;
     }
     this.gameService.buyRoute(this.game.id, route).pipe(take(1)).subscribe();

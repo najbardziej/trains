@@ -33,6 +33,10 @@ export class GameService {
     return game.toObject({ virtuals: true });
   }
 
+  async saveGame(id: string, game: Game) {
+    return this.gameModel.updateOne({ _id: id }, game).exec();
+  }
+
   async create(players: string[]) {
 
     const JOKER_COUNT = 14;

@@ -34,9 +34,8 @@ export class GameController {
 
   @Put('/:id/buy-route')
   async buyRoute(@Param('id') id: string, @Body() route, @Req() req) {
-    const playerId = await this.gameService.getPlayerId(id, req.user.username);
-    const player = await this.gameService.getPlayer(id, req.user.username);
     const game = await this.gameService.getForUser(id, req.user.username);
+    const player = game.players.find(x => x.username == req.user.username);
 
     const savedRoute: any = await this.gameMapService.getRoute(id, route.id);
 
@@ -62,11 +61,10 @@ export class GameController {
     if (player.cards[0] < 0)
       throw new ForbiddenException();
 
-    route.owner = playerId;
+    route.owner = game.players.findIndex(x => x.username == req.user.username);;
 
     await this.gameMapService.saveRoute(id, route);
     await this.gameService.saveGame(id, game);
-    await this.gameService.savePlayer(id, req.user.username, player);
 
     this.eventsGateway.emitGame(
       await this.gameService.getForUser(id, req.user.username)

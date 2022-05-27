@@ -19,7 +19,7 @@ export class GameMapService {
   create(gameId: string) {
     const map = {...gameMap, gameId: gameId};
 
-    map.edges.sort(edge => -edge.length);
+    map.edges.sort((e1, e2) => e2.length - e1.length);
 
     map.edges.forEach(edge => {
       const quantities = []

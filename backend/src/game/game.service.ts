@@ -113,24 +113,4 @@ export class GameService {
     this.fillAvailableCards(game);
     return (new this.gameModel(game)).save();
   }
-
-  async getPlayerId(id: string, username: string): Promise<number> {
-    const game = await this.gameModel.findOne({ _id: id }).exec();
-    this.checkIfUserIsAllowed(game, username);
-    return game.players.findIndex(x => x.username == username);
-  }
-
-  async getPlayer(id: string, username: string) {
-    const game = await this.gameModel.findOne({ _id: id }).exec();
-    this.checkIfUserIsAllowed(game, username);
-    return game.players.find(x => x.username == username);
-  }
-
-  async savePlayer(id: string, username: string, player: any) {
-    const game = await this.gameModel.findOne({ _id: id }).exec();
-    this.checkIfUserIsAllowed(game, username);
-    const index = game.players.findIndex(x => x.username == username);
-    game.players[index] = player;
-    return this.gameModel.updateOne({ _id: id }, game).exec();
-  }
 }

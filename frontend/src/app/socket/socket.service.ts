@@ -27,6 +27,10 @@ export class SocketService {
     return this.socket.fromEvent(`game-${gameId}`);
   }
 
+  getGameMapObservable(gameId: string): Observable<any> {
+    return this.socket.fromEvent(`gamemap-${gameId}`);
+  }
+
   getGameRoomsObservable(): Observable<any> {
     return this.socket.fromEvent("lobby");
   }

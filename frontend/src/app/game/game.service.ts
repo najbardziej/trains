@@ -20,4 +20,8 @@ export class GameService {
   drawCard(id: string, index: number) {
     return this.http.put(`${this.gameUrl}/${id}/get-card/${index}`, {});
   }
+
+  buyRoute(id: string, route: any) {
+    return this.http.put(`${this.gameUrl}/${id}/buy-route`, route);
+  }
 }

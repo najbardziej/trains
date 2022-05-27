@@ -5,17 +5,19 @@
     <div class="card-picker__cards">
       <game-card 
         (cardSelected)="onCardSelected($any($event))"
-        ></game-card>
+      ></game-card>
       <game-card 
         *ngFor="let card of game.availableCards; let i = index"
         [card]="card"
         [index]="i"
         (cardSelected)="onCardSelected($any($event))"
-        ></game-card>
+      ></game-card>
     </div>
   </div>
 
-  <game-map></game-map>
+  <game-map
+    (routeSelected)="onRouteSelected($any($event))"
+  ></game-map>
 
   <div class="missions">
 
@@ -27,14 +29,15 @@
       *ngFor="let playerCard of playerCards"
       [quantity]="playerCard.quantity"
       [card]="playerCard.card"
-      ></player-card>
+      (colorSelected)="onColorSelected($any($event))"
+    ></player-card>
   </div>
 
   <div class="player-info">
     <player-info 
       *ngFor="let player of game.players"
       [player]="player"
-      ></player-info>
+    ></player-info>
   </div>
 
 </div>

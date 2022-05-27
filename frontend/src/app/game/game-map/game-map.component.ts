@@ -1,6 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { contain } from 'intrinsic-scale';
+import { Subscription } from 'rxjs';
+import { SocketService } from 'src/app/socket/socket.service';
 
 const MAP_HEIGHT = 921.633;
 const MAP_WIDTH = 1408;
@@ -21,22 +23,42 @@ const EDGE_CREATION_MODE = false;
 })
 export class GameMapComponent implements OnInit, AfterViewInit {
 
-  constructor(private readonly route: ActivatedRoute) { }
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly socketService: SocketService,
+  ) { }
 
   private gameMap!: HTMLElement;
   private gameMapOverlay!: HTMLElement;
   private helperNodes: number[] = [];
+  private subscription!: Subscription;
 
   mapData: any = this.route.snapshot.data.gameMap;
+
+  @Output() routeSelected: EventEmitter<number> = new EventEmitter();
 
   ngOnInit(): void {
     this.gameMapOverlay = document.querySelector('.game-map__overlay') as HTMLElement;
     this.gameMap = document.querySelector('game-map') as HTMLElement;
+
+    this.subscription = this.socketService.getGameMapObservable(this.mapData.gameId)
+      .subscribe((gameMapData: any) => {
+        this.mapData = gameMapData;
+        console.log(gameMapData);
+        this.removeMapElements();
+        this.createMapElements();
+    });
+
     this.createMapElements();
   }
 
   ngAfterViewInit(): void {
     this.rescaleMap();
+  }
+
+  removeMapElements() {
+    document.querySelectorAll(".route-container").forEach(r => r.remove()) 
+    document.querySelectorAll(".node").forEach(n => n.remove()) 
   }
 
   createMapElements() {
@@ -67,30 +89,45 @@ export class GameMapComponent implements OnInit, AfterViewInit {
 
       [startX, endX] = [startX - dx, endX + dx];
       [startY, endY] = [startY - dy, endY + dy];
-
+      
       // Create trains in equal distances
-      [dx, dy] = [
-        (endX - startX) / (edge.length * 2),
-        (endY - startY) / (edge.length * 2)
-      ];
-      let [x, y] = [startX + dx, startY + dy];
+      if (!edge.owner && edge.owner !== 0) {
+        [dx, dy] = [
+          (endX - startX) / (edge.length * 2),
+          (endY - startY) / (edge.length * 2)
+        ];
+        let [x, y] = [startX + dx, startY + dy];
 
-      let routeContainer = document.createElement('div');
-      routeContainer.classList.add("route-container");
+        let routeContainer = document.createElement('div');
+        routeContainer.classList.add("route-container");
+        routeContainer.dataset.id = edge.id;
+        routeContainer.addEventListener("click", (event) => {
+          this.routeSelected.emit(edge);
+        })
 
-      for (let i = 0; i < edge.length; i++) {
-        routeContainer.appendChild(
-          this.createTrain(
-            x + (TRAIN_WIDTH / 2), 
-            y - (TRAIN_HEIGHT / 2), 
-            edge.color,
+        for (let i = 0; i < edge.length; i++) {
+          routeContainer.appendChild(
+            this.createTrain(
+              x + (TRAIN_WIDTH / 2), 
+              y - (TRAIN_HEIGHT / 2), 
+              edge.color,
+              theta)
+          );
+          x += dx * 2;
+          y += dy * 2;
+        }
+
+        this.gameMapOverlay.appendChild(routeContainer);
+      } else {
+        this.gameMapOverlay.appendChild(
+          this.createRoute(
+            (startX + endX) / 2 + (length - 20) / 2, 
+            (startY + endY) / 2 - 5, 
+            length - 20,
+            (edge.owner + 1),
             theta)
         );
-        x += dx * 2;
-        y += dy * 2;
       }
-
-      this.gameMapOverlay.appendChild(routeContainer);
     });
   }
 
@@ -139,6 +176,17 @@ export class GameMapComponent implements OnInit, AfterViewInit {
     train.style.right = `${(BOUNDING_MAP_RECT_RIGHT_FHD - x)}px`;
     train.style.transform = `rotate(${angle}rad)`;
     return train;
+  }
+
+  private createRoute(x: number, y: number, width: number, color: number = 9, angle: number = 0) {
+    const route = document.createElement('div');
+    route.classList.add("route");
+    route.dataset.color = color.toString();
+    route.style.top = `${y}px`;
+    route.style.right = `${(BOUNDING_MAP_RECT_RIGHT_FHD - x)}px`;
+    route.style.transform = `rotate(${angle}rad)`;
+    route.style.width = `${width}px`;
+    return route;
   }
 
   rescaleMap() {

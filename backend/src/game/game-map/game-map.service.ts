@@ -53,4 +53,16 @@ export class GameMapService {
 
     return (new this.gameMapModel(map)).save();
   }
+
+  async getRoute(gameId: string, routeId: number) {
+    const map: any = await this.get(gameId);
+    return map.edges.find(edge => edge.id == routeId);
+  }
+
+  async saveRoute(gameId: string, route: any) {
+    const map: any = await this.get(gameId);
+    const index = map.edges.findIndex(edge => edge.id == route.id);
+    map.edges[index] = route;
+    return this.gameMapModel.updateOne({gameId: gameId}, map).exec();
+  }
 }

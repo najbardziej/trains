@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'player-card',
@@ -11,7 +11,13 @@ export class PlayerCardComponent implements OnInit {
 
   @Input() card: number = -1;
   @Input() quantity: number = 0;
- 
+
+  @Output() colorSelected: EventEmitter<number> = new EventEmitter();
+
   ngOnInit(): void { }
+
+  selectColor(): void {
+    this.colorSelected.emit(this.card);
+  }
   
 }

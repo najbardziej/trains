@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { GameModule } from './game/game.module';
+import { ToastContainerModule, ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,11 @@ import { GameModule } from './game/game.module';
     GameModule,
     AuthModule,
     BrowserAnimationsModule,
-    SocketIoModule.forRoot({ url: environment.apiUrl, options: {}})
+    SocketIoModule.forRoot({ url: environment.apiUrl, options: {}}),
+    ToastrModule.forRoot({
+      timeOut: 4000,
+    }),
+    ToastContainerModule,
   ],
   bootstrap: [AppComponent]
 })

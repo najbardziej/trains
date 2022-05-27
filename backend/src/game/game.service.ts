@@ -11,6 +11,15 @@ export class GameService {
     @InjectModel(Game.name) private gameModel: Model<GameDocument>
   ){}
 
+  private checkIfUserIsAllowed(game: Game, username: string) {
+    if (!game) {
+      throw new ForbiddenException();
+    }
+    if (!game.players.find(x => x.username == username)) {
+      throw new ForbiddenException();
+    }
+  }
+
   private arrayShuffle(array: Array<any>) {
     return array
       .map(value => ({ value, sort: Math.random() }))
@@ -20,12 +29,7 @@ export class GameService {
 
   async getForUser(id: string, username: string): Promise<Game> {
     const game = await this.gameModel.findOne({ _id: id }).exec();
-    if (!game) {
-      return null;
-    }
-    if (!game.players.find(x => x.username == username)) {
-      throw new ForbiddenException();
-    }
+    this.checkIfUserIsAllowed(game, username);
     return game.toObject({ virtuals: true });
   }
 
@@ -87,12 +91,7 @@ export class GameService {
 
   async drawCard(id: string, username: string, index: number) {
     const game = await this.gameModel.findOne({ _id: id }).exec();
-    if (!game) {
-      return null;
-    }
-    if (!game.players.find(x => x.username == username)) {
-      throw new ForbiddenException();
-    }
+    this.checkIfUserIsAllowed(game, username);
     if (index > 4 || index < -1) {
       throw new ForbiddenException();
     }
@@ -111,4 +110,23 @@ export class GameService {
     return (new this.gameModel(game)).save();
   }
 
+  async getPlayerId(id: string, username: string): Promise<number> {
+    const game = await this.gameModel.findOne({ _id: id }).exec();
+    this.checkIfUserIsAllowed(game, username);
+    return game.players.findIndex(x => x.username == username);
+  }
+
+  async getPlayer(id: string, username: string) {
+    const game = await this.gameModel.findOne({ _id: id }).exec();
+    this.checkIfUserIsAllowed(game, username);
+    return game.players.find(x => x.username == username);
+  }
+
+  async savePlayer(id: string, username: string, player: any) {
+    const game = await this.gameModel.findOne({ _id: id }).exec();
+    this.checkIfUserIsAllowed(game, username);
+    const index = game.players.findIndex(x => x.username == username);
+    game.players[index] = player;
+    return this.gameModel.updateOne({ _id: id }, game).exec();
+  }
 }

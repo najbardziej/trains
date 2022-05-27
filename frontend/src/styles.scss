@@ -7,7 +7,15 @@
 @import '~mdb-angular-ui-kit/assets/scss/mdb.scss';
 @import '~mdb-ui-kit/css/mdb.min.css';
 
+@import '~ngx-toastr/toastr';
+
 @import url('https://fonts.googleapis.com/css2?family=Stint+Ultra+Condensed&display=swap');
+
+.toast-top-right {
+  top: 3px !important;
+  right: calc(10vw + 3px) !important;
+  pointer-events: none;
+}
 
 :root {
   --map-height: 921.633px;
@@ -69,6 +77,12 @@ h3 {
   // border: 2px solid darkgray;
   cursor: pointer;
   transition: all 0.15s linear;
+}
+
+.route {
+  position: absolute;
+  height: 10px;
+  border: 2px solid #212121;
 }
 
 .train {

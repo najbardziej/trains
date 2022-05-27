@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Post, UseGuards, Request, Res, Param } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { UserDto } from 'src/dto/user.dto';
-import { UserRegisterDto } from 'src/dto/userRegister.dto';
+import { UserRegisterDto } from 'src/dto/user-register.dto';
 import { AuthService } from './auth.service';
 import { JwtRefreshGuard } from './jwt-refresh.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 import { TokenDto } from 'src/dto/token.dto';
-import { GoogleTokenDto } from 'src/dto/googleToken.dto';
+import { GoogleTokenDto } from 'src/dto/google-token.dto';
 
 @Controller('auth')
 export class AuthController {

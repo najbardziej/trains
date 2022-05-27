@@ -41,7 +41,7 @@ export class GameMapComponent implements OnInit, AfterViewInit {
     this.gameMapOverlay = document.querySelector('.game-map__overlay') as HTMLElement;
     this.gameMap = document.querySelector('game-map') as HTMLElement;
 
-    this.subscription = this.socketService.getGameMapObservable(this.mapData.gameId)
+    this.subscription = this.socketService.getGameMapObservable(this.route.snapshot.paramMap.get('id') || '')
       .subscribe((gameMapData: any) => {
         this.mapData = gameMapData;
         console.log(gameMapData);

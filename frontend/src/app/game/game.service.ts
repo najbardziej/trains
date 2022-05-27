@@ -17,8 +17,12 @@ export class GameService {
     return this.http.get<Game>(`${this.gameUrl}/${id}`);
   }
 
+  getGameMapData(id: string): Observable<any> {
+    return this.http.get(`${this.gameUrl}/${id}/game-map`);
+  }
+
   drawCard(id: string, index: number) {
-    return this.http.put(`${this.gameUrl}/${id}/get-card/${index}`, {});
+    return this.http.put(`${this.gameUrl}/${id}/draw-card/${index}`, {});
   }
 
   buyRoute(id: string, route: any) {

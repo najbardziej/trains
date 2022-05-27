@@ -1,8 +1,19 @@
 
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export type GameDocument = Game & Document;
+export type PlayerDocument = Player & Document;
+export type GameMapDocument = GameMap & Document;
+
+@Schema({versionKey: false})
+export class GameMap {
+  @Prop([])
+  nodes: any[];
+
+  @Prop([])
+  edges: any[];
+};
 
 @Schema({ versionKey: false, _id: false })
 export class Player {
@@ -33,6 +44,8 @@ export class Game {
   @Prop()
   discardPile: number[];
 
+  @Prop()
+  gameMap: GameMap;
 };
 
 export const GameSchema = SchemaFactory.createForClass(Game);

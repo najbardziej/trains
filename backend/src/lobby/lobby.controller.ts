@@ -6,7 +6,6 @@ import { GameRoomDto } from 'src/dto/game-room.dto';
 import { EventsGateway } from 'src/events/events.gateway';
 import { GameRoom } from 'src/schemas/game-room.schema';
 import { GameService } from 'src/game/game.service';
-import { GameMapService } from 'src/game/game-map/game-map.service';
 
 @ApiTags('lobby')
 @ApiBearerAuth()
@@ -17,7 +16,6 @@ export class LobbyController {
   constructor(
     private readonly lobbyService: LobbyService,
     private readonly gameService: GameService,
-    private readonly gameMapService: GameMapService,
     private readonly eventsGateway: EventsGateway, 
     ) { }
 
@@ -54,8 +52,7 @@ export class LobbyController {
     if (gameRoom.players.length === 1) {
       throw new ForbiddenException()
     }
-    let game = await this.gameService.create(gameRoom.players);
-    await this.gameMapService.create(game.id);
+    let game = await this.gameService.createGame(gameRoom.players);
     this.eventsGateway.emitGameStart(id, game.id);
     await this.lobbyService.delete(id, req.user.username);
     await this.eventsGateway.emitLobby();

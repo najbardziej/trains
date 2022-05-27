@@ -57,8 +57,8 @@ export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
     this.server.emit(`game-${game['id']}`, game);
   }
 
-  emitGameMap(gameMap: any) {
-    this.server.emit(`gamemap-${gameMap['gameId']}`, gameMap);
+  emitGameMap(game: Game) {
+    this.server.emit(`gamemap-${game['id']}`, game.gameMap);
   }
 
   @SubscribeMessage('identify')

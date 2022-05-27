@@ -3,10 +3,10 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt';
 import { UserDto } from 'src/dto/user.dto';
-import { UserRegisterDto } from 'src/dto/userRegister.dto';
+import { UserRegisterDto } from 'src/dto/user-register.dto';
 import { TokenDto } from 'src/dto/token.dto';
 import { GoogleAuthService } from './google-auth.service';
-import { GoogleTokenDto } from 'src/dto/googleToken.dto';
+import { GoogleTokenDto } from 'src/dto/google-token.dto';
 
 @Injectable()
 export class AuthService {

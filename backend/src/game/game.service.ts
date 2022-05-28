@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Game, GameMap, GameDocument } from 'src/schemas/game.schema';
-import { User, UserDocument } from 'src/schemas/user.schema';
+import { Game, GameMap, GameDocument, Missions } from 'src/schemas/game.schema';
+import * as Graph from 'node-dijkstra';
 
 import * as gameMapFile from './game-map.json';
 
@@ -57,6 +57,64 @@ export class GameService {
     }
   }
 
+  private generateMissions(gameMap): Missions {
+    const missions = {
+      'main': [],
+      'additional': []
+    };
+
+    const graph = {}
+    gameMap.nodes.forEach((node) => {
+      graph[node.id] = {}
+      gameMap.edges.forEach(edge =>{
+          if (edge.nodes.some(n => n == node.id)) {
+              let otherId = edge.nodes.filter(x => x != node.id)[0]
+              graph[node.id][otherId] = edge.length;
+          }
+      })
+    })
+
+    const route = new Graph(graph);
+
+    const nodesForMain = this.arrayShuffle(gameMap.nodes.map(node => node.id.toString()));
+    while (missions.main.length < 5) {
+      let node1 = nodesForMain.pop();
+      for (let node2 of nodesForMain) {
+        const path = route.path(node1, node2, { cost: true }); 
+        if (path.cost >= 18 && path.cost <= 20) {
+          missions.main.push({
+            nodes: [node1, node2],
+            points: path.cost,
+          });
+
+          nodesForMain.splice(nodesForMain.indexOf(node2), 1);
+          break;
+        }
+      }
+    }
+
+    const nodesForAdditional = this.arrayShuffle(gameMap.nodes.map(node => node.id.toString()).flatMap(n => [n,n]));
+    while (missions.additional.length < 35) {
+      let node1 = nodesForAdditional.pop();
+      for (let node2 of nodesForAdditional) {
+        const path = route.path(node1, node2, { cost: true }); 
+        if (path.cost >= 4 && path.cost <= 12 && path.path.length > 2) {
+          if (missions.additional.some(x => x.nodes.includes(node1) && x.nodes.includes(node2))) {
+            continue;
+          }
+          missions.additional.push({
+            nodes: [node1, node2],
+            points: path.cost,
+          });
+
+          nodesForAdditional.splice(nodesForAdditional.indexOf(node2), 1);
+          break;
+        }
+      }
+    }
+    return missions;
+  }
+
   async getGameMap(id: string) {
     return (await this.gameModel.findOne({_id: id})).toObject().gameMap;
   }
@@ -108,7 +166,8 @@ export class GameService {
     const JOKER_COUNT = 14;
     const COMMON_CARD_COUNT = 12;
 
-    let game: Game = {
+    const gameMap = this.createGameMap();
+    const game: Game = {
       players: this.arrayShuffle(players.map(x => ({ 
         username: x,
         trains: 40,
@@ -129,18 +188,9 @@ export class GameService {
       ]),
       availableCards: [],
       discardPile: [],
-      gameMap: this.createGameMap(),
+      gameMap: gameMap,
+      missions: this.generateMissions(gameMap),
     }
-
-    // map.nodes.forEach((node) => {
-    //   graph[node.id] = {}
-    //   map.edges.forEach(edge =>{
-    //       if (edge.nodes.some(n => n == node.id)) {
-    //           let otherId = edge.nodes.filter(x => x != node.id)[0]
-    //           graph[node.id][otherId] = edge.length;
-    //       }
-    //   })
-    // }) 
 
     this.fillAvailableCards(game);
 

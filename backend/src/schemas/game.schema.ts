@@ -27,7 +27,10 @@ export class Player {
   trains: number;
 
   @Prop([])
-  availableMissions: any[]
+  availableMissions: any[];
+
+  @Prop([])
+  missions: any[];
 }
 
 @Schema({ versionKey: false, _id: false })

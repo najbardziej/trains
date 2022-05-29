@@ -38,9 +38,8 @@ export class GameService {
   }
 
   private fillAvailableCards(game: Game) {
-    if (game.cardPile.length == 0 && game.discardPile.length == 0) {
+    if (game.cardPile.length == 0 && game.discardPile.length == 0)
       throw new ForbiddenException();
-    }
     
     while (game.availableCards.length < 5) {
       this.reshufflePile(game);
@@ -76,6 +75,7 @@ export class GameService {
     })
 
     const route = new Graph(graph);
+    let id = 0;
 
     const nodesForMain = this.arrayShuffle(gameMap.nodes.map(node => node.id.toString()));
     while (missions.main.length < 5) {
@@ -86,6 +86,7 @@ export class GameService {
           missions.main.push({
             nodes: [node1, node2],
             points: path.cost,
+            id: id++,
           });
 
           nodesForMain.splice(nodesForMain.indexOf(node2), 1);
@@ -106,6 +107,7 @@ export class GameService {
           missions.additional.push({
             nodes: [node1, node2],
             points: path.cost,
+            id: id++,
           });
 
           nodesForAdditional.splice(nodesForAdditional.indexOf(node2), 1);
@@ -116,6 +118,47 @@ export class GameService {
     return missions;
   }
 
+  async drawMissions(id: string, username: string) {
+    const game = await this.gameModel.findOne({_id: id});
+    this.checkIfUserIsAllowed(game, username);
+    const player = game.players.find(x => x.username == username);
+    
+    if (player.availableMissions.length > 0)
+      throw new ForbiddenException();
+
+    if (game.missions.additional.length < 3)
+      throw new ForbiddenException();
+
+    const missions = game.missions.additional.splice(0, 3);
+    player.availableMissions = missions;
+    game.save();
+  }
+
+  async discardMission(id: string, username: string, missionId: number) {
+    const game = await this.gameModel.findOne({_id: id});
+    this.checkIfUserIsAllowed(game, username);
+    const player = game.players.find(x => x.username == username);
+    const missionIndex = player.availableMissions.findIndex(x => x.id == missionId);
+    const mission = player.availableMissions.splice(missionIndex, 1)[0];
+    // If mission is additional mission return it to pile
+    if (mission.id >= 5) {
+      game.missions.additional.push(mission);
+    }
+    if (player.availableMissions.length == 1) {
+      this.acceptMissions(id, username);
+    }
+    game.save();
+  }
+
+  async acceptMissions(id: string, username: string) {
+    const game = await this.gameModel.findOne({_id: id});
+    this.checkIfUserIsAllowed(game, username);
+    const player = game.players.find(x => x.username == username);
+    player.missions = [...player.missions, ...player.availableMissions];
+    player.availableMissions = [];
+    game.save();
+  }
+
   async getGameMap(id: string) {
     return (await this.gameModel.findOne({_id: id})).toObject().gameMap;
   }
@@ -124,7 +167,6 @@ export class GameService {
     const gameMap = {...gameMapFile};
 
     gameMap.edges.sort((e1, e2) => e2.length - e1.length);
-
     gameMap.edges.forEach(edge => {
       const quantities = []
       
@@ -174,7 +216,7 @@ export class GameService {
         username: x,
         trains: 40,
         cards: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-        missions: [missions.main.pop(), missions.additional.pop(), missions.additional.pop()],
+        missions: [missions.main.shift(), missions.additional.shift(), missions.additional.shift()],
       }))),
       currentPlayer: 0,
       forcedMove: FORCED_MOVE.DRAW_MISSION,
@@ -232,7 +274,7 @@ export class GameService {
     player.trains -= savedRoute.length;
     savedRoute.owner = game.players.findIndex(x => x.username == username);
 
-    return (new this.gameModel(game)).save();
+    return game.save();
   }
 
   async drawCard(id: string, username: string, index: number) {
@@ -252,6 +294,6 @@ export class GameService {
     }
     game.players.find(x => x.username == username).cards[newCard]++;
     this.fillAvailableCards(game);
-    return (new this.gameModel(game)).save();
+    return game.save();
   }
 }

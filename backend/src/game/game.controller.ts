@@ -43,4 +43,31 @@ export class GameController {
     this.eventsGateway.emitGame(game);
     this.eventsGateway.emitGameMap(game);
   }
+
+  @Put('/:id/draw-missions')
+  async drawMissions(@Param('id') id: string, @Req() req) {
+    await this.gameService.drawMissions(id, req.user.username);
+    
+    // TODO: Return anonymized game object instead of emitting whole game
+    const game = await this.gameService.getGame(id, req.user.username);
+    this.eventsGateway.emitGame(game);
+  }
+
+  @Put('/:id/discard-mission/:missionId')
+  async discardMission(@Param('id') id: string, @Param('missionId') missionId, @Req() req) {
+    await this.gameService.discardMission(id, req.user.username, missionId);
+
+    // TODO: Return anonymized game object instead of emitting whole game
+    const game = await this.gameService.getGame(id, req.user.username);
+    this.eventsGateway.emitGame(game);
+  }
+
+  @Put('/:id/accept-missions')
+  async acceptMissions(@Param('id') id: string, @Req() req) {
+    await this.gameService.acceptMissions(id, req.user.username);
+
+    // TODO: Return anonymized game object instead of emitting whole game
+    const game = await this.gameService.getGame(id, req.user.username);
+    this.eventsGateway.emitGame(game);
+  }
 }

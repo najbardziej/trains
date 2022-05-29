@@ -39,6 +39,11 @@
     #880E4F,
     #B71C1C
   );
+  --color-pink: #EC407A;
+  --color-lightblue: #42A5F5;
+  --color-lightgreen: #66BB6A;
+  --color-brown: #8D6E63;
+  --color-lime: #D4E157;
 };
 
 [data-color="-1"] { background: var(--color-cardback); }
@@ -52,6 +57,12 @@
 [data-color="7"] { background: var(--color-white); }
 [data-color="8"] { background: var(--color-black); }
 [data-color="9"] { background: var(--color-gray); }
+
+[data-playercolor="0"] { background: var(--color-pink); }
+[data-playercolor="1"] { background: var(--color-lightblue); }
+[data-playercolor="2"] { background: var(--color-lightgreen); }
+[data-playercolor="3"] { background: var(--color-brown); }
+[data-playercolor="4"] { background: var(--color-lime); }
 
 body, html {
   margin: 0;

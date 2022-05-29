@@ -124,7 +124,7 @@ export class GameMapComponent implements OnInit, AfterViewInit {
             (startX + endX) / 2 + (length - 20) / 2, 
             (startY + endY) / 2 - 5, 
             length - 20,
-            (edge.owner + 1),
+            edge.owner,
             theta)
         );
       }
@@ -181,7 +181,7 @@ export class GameMapComponent implements OnInit, AfterViewInit {
   private createRoute(x: number, y: number, width: number, color: number = 9, angle: number = 0) {
     const route = document.createElement('div');
     route.classList.add("route");
-    route.dataset.color = color.toString();
+    route.dataset.playercolor = color.toString();
     route.style.top = `${y}px`;
     route.style.right = `${(BOUNDING_MAP_RECT_RIGHT_FHD - x)}px`;
     route.style.transform = `rotate(${angle}rad)`;

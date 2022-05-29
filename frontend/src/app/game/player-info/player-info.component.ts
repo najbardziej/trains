@@ -10,6 +10,7 @@ export class PlayerInfoComponent implements OnInit {
   constructor() { }
 
   @Input() player: any;
+  @Input() index: number = -1;
 
   cardCount = () => this.player.cards.reduce((x: number, y: number) => x + y);
 

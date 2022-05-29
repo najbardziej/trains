@@ -131,7 +131,7 @@ export class GameService {
 
     const missions = game.missions.additional.splice(0, 3);
     player.availableMissions = missions;
-    game.save();
+    (new this.gameModel(game)).save();
   }
 
   async discardMission(id: string, username: string, missionId: number) {
@@ -147,7 +147,7 @@ export class GameService {
     if (player.availableMissions.length == 1) {
       this.acceptMissions(id, username);
     }
-    game.save();
+    (new this.gameModel(game)).save();
   }
 
   async acceptMissions(id: string, username: string) {
@@ -156,7 +156,7 @@ export class GameService {
     const player = game.players.find(x => x.username == username);
     player.missions = [...player.missions, ...player.availableMissions];
     player.availableMissions = [];
-    game.save();
+    (new this.gameModel(game)).save();
   }
 
   async getGameMap(id: string) {
@@ -274,7 +274,7 @@ export class GameService {
     player.trains -= savedRoute.length;
     savedRoute.owner = game.players.findIndex(x => x.username == username);
 
-    return game.save();
+    return (new this.gameModel(game)).save();
   }
 
   async drawCard(id: string, username: string, index: number) {
@@ -294,6 +294,7 @@ export class GameService {
     }
     game.players.find(x => x.username == username).cards[newCard]++;
     this.fillAvailableCards(game);
-    return game.save();
+    game.markModified('players');
+    return (new this.gameModel(game)).save();
   }
 }

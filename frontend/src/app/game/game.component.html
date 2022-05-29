@@ -35,8 +35,9 @@
 
   <div class="player-info">
     <player-info 
-      *ngFor="let player of game.players"
+      *ngFor="let player of game.players; let playerIndex = index"
       [player]="player"
+      [index]="playerIndex"
     ></player-info>
   </div>
 

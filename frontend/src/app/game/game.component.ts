@@ -28,10 +28,12 @@ export class GameComponent implements OnInit {
 
   game: Game = this.route.snapshot.data.game;
 
+  get player() {
+    return this.game.players.find((p: any) => p.username === this.authService.getUsername());
+  }
+
   get playerCards() {
-    return Array.from(this.game.players.find(
-      (p: any) => p.username === this.authService.getUsername()
-    ).cards.entries()).map(([i, x]: any) => ({ card: i, quantity: x }))
+    return Array.from(this.player.cards.entries()).map(([i, x]: any) => ({ card: i, quantity: x }))
   }
 
   ngOnInit(): void {
@@ -40,6 +42,18 @@ export class GameComponent implements OnInit {
         this.game = game;
         console.log(game);
     });
+  }
+
+  onMissionSelected(missionId: number) {
+    this.gameService.discardMission(this.game.id, missionId).pipe(take(1)).subscribe();
+  }
+
+  onMissionDrawClick() {
+    this.gameService.drawMissions(this.game.id).pipe(take(1)).subscribe();
+  }
+
+  onMissionAcceptClick() {
+    this.gameService.acceptMissions(this.game.id).pipe(take(1)).subscribe();
   }
 
   onColorSelected(color: number) {
@@ -54,7 +68,7 @@ export class GameComponent implements OnInit {
   onRouteSelected(route: any) {
     if (route.color == COLOR.GRAY) {
       this.selectedRoute = route;
-      this.toastrService.warning("Select color ->", "", { timeOut: 10000,  });
+      this.toastrService.info("Select color ->", "", { timeOut: 6000 });
       return;
     }
     this.gameService.buyRoute(this.game.id, route).pipe(take(1)).subscribe();

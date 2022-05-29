@@ -19,8 +19,37 @@
     (routeSelected)="onRouteSelected($any($event))"
   ></game-map>
 
-  <div class="missions">
+  <div class="mission-picker">
+    <h3 class="mission-picker__title">Draw missions: </h3>
+    <button
+      *ngIf="player.availableMissions.length == 0"
+      class="btn btn-primary"
+      (click)="onMissionDrawClick()"
+      >Draw missions
+    </button>
+    <player-mission 
+      *ngFor="let mission of player.availableMissions"
+      [mission]="mission"
+      [active]="false"
+      (missionSelected)="onMissionSelected($any($event))"
+    ></player-mission>
+    <button
+      *ngIf="player.availableMissions.length > 0"
+      class="btn btn-success btn-sm"
+      (click)="onMissionAcceptClick()"
+      >Accept missions
+    </button>
+  </div>
 
+  <div class="player-missions">
+    <h3 class="player-missions__title">Your missions: </h3>
+    <div class="player-missions__wrapper">
+      <player-mission
+      *ngFor="let mission of player.missions"
+      [mission]="mission"
+      [active]="true"
+    ></player-mission>
+    </div>
   </div>
 
   <div class="player-cards">

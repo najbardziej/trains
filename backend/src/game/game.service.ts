@@ -131,7 +131,7 @@ export class GameService {
 
     const missions = game.missions.additional.splice(0, 3);
     player.availableMissions = missions;
-    (new this.gameModel(game)).save();
+    return (new this.gameModel(game)).save();
   }
 
   async discardMission(id: string, username: string, missionId: number) {
@@ -145,9 +145,10 @@ export class GameService {
       game.missions.additional.push(mission);
     }
     if (player.availableMissions.length == 1) {
-      this.acceptMissions(id, username);
+      await (new this.gameModel(game)).save();
+      return this.acceptMissions(id, username);
     }
-    (new this.gameModel(game)).save();
+    return (new this.gameModel(game)).save();
   }
 
   async acceptMissions(id: string, username: string) {
@@ -156,7 +157,7 @@ export class GameService {
     const player = game.players.find(x => x.username == username);
     player.missions = [...player.missions, ...player.availableMissions];
     player.availableMissions = [];
-    (new this.gameModel(game)).save();
+    return (new this.gameModel(game)).save();
   }
 
   async getGameMap(id: string) {
@@ -216,7 +217,8 @@ export class GameService {
         username: x,
         trains: 40,
         cards: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-        missions: [missions.main.shift(), missions.additional.shift(), missions.additional.shift()],
+        missions: [],
+        availableMissions: [missions.main.shift(), missions.additional.shift(), missions.additional.shift()],
       }))),
       currentPlayer: 0,
       forcedMove: FORCED_MOVE.DRAW_MISSION,

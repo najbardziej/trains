@@ -14,10 +14,10 @@
     
     // transition: all 0.15s linear;
     // 
-    // &:hover {
-    //   cursor: pointer;
-    //   filter: brightness(110%);
-    //   box-shadow: 5px 5px 25px rgba($color: #000, $alpha: .7);
-    // }
+    &:hover {
+      cursor: pointer;
+      // filter: brightness(110%);
+      // box-shadow: 5px 5px 25px rgba($color: #000, $alpha: .7);
+    }
   }
 }

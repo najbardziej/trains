@@ -7,6 +7,7 @@
   min-height: 100vh;
   max-height: 100vh;
   display: grid;
+  overflow: hidden;
   // grid-template-areas: 
   //   'card-picker  gamemap'
   //   'missions     gamemap'
@@ -15,22 +16,26 @@
   // grid-template-rows: 2fr 3fr 1fr;
 
   grid-template-areas: 
-    'card-picker  gamemap       player-cards'
-    'missions     gamemap       player-cards'
-    'missions     player-info   player-cards';
+    'card-picker         gamemap       player-cards'
+    'mission-picker      gamemap       player-cards'
+    'player-missions     gamemap       player-cards'
+    'player-missions     player-info   player-cards';
   grid-template-columns: 1fr 4.4fr 0.6fr;
-  grid-template-rows:    2fr   4fr 0.3fr;
+  grid-template-rows:    2fr 1.4fr 2.6fr 0.3fr;
 
-  .card-picker {
+  .card-picker, .mission-picker, .player-missions {
     display: flex;
-    grid-area: card-picker;
     flex-direction: column;
-    
+
     &__title {
       display: block;
       margin-top: 5px;
       text-align: center;
     }
+  }
+
+  .card-picker {
+    grid-area: card-picker;
 
     &__cards {
       flex-grow: 1;
@@ -40,15 +45,28 @@
       align-content: space-evenly;
     }
   }
+
+  .mission-picker {
+    grid-area: mission-picker;
+
+    button {
+      margin-left: 10px !important;
+      margin-right: 10px !important;
+    }
+  }
+
+  .player-missions {
+    grid-area: player-missions;
+
+    &__wrapper {
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+  }
   
   game-map {
     grid-area: gamemap;
     position: relative;
-  }
-  
-  .missions {
-    grid-area: missions;
-    background: rgba(144, 238, 144, 0.3);
   }
 
   .player-cards {

@@ -12,9 +12,10 @@ import { AuthModule } from '../auth/auth.module';
 import { GameMapComponent } from './game-map/game-map.component';
 import { PlayerInfoComponent } from './player-info/player-info.component';
 import { GameMapResolver } from './game-map/game-map.resolver';
+import { PlayerMissionComponent } from './player-mission/player-mission.component';
 
 @NgModule({
-  declarations: [GameComponent, GameCardComponent, PlayerCardComponent, GameMapComponent, PlayerInfoComponent],
+  declarations: [GameComponent, GameCardComponent, PlayerCardComponent, GameMapComponent, PlayerInfoComponent, PlayerMissionComponent],
   imports: [
     CommonModule,
     AuthModule,

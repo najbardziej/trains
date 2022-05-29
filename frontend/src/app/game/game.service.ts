@@ -28,4 +28,16 @@ export class GameService {
   buyRoute(id: string, route: any) {
     return this.http.put(`${this.gameUrl}/${id}/buy-route`, route);
   }
+
+  discardMission(id: string, missionId: number) {
+    return this.http.put(`${this.gameUrl}/${id}/discard-mission/${missionId}`, {});
+  }
+
+  drawMissions(id: string) {
+    return this.http.put(`${this.gameUrl}/${id}/draw-missions`, {});
+  }
+
+  acceptMissions(id: string) {
+    return this.http.put(`${this.gameUrl}/${id}/accept-missions`, {});
+  }
 }

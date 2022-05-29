@@ -5,6 +5,7 @@ import { Game, GameMap, GameDocument, Missions } from 'src/schemas/game.schema';
 import * as Graph from 'node-dijkstra';
 
 import * as gameMapFile from './game-map.json';
+import { COLOR, FORCED_MOVE } from 'src/model/constants';
 
 @Injectable()
 export class GameService {
@@ -167,29 +168,31 @@ export class GameService {
     const COMMON_CARD_COUNT = 12;
 
     const gameMap = this.createGameMap();
+    const missions = this.generateMissions(gameMap);
     const game: Game = {
       players: this.arrayShuffle(players.map(x => ({ 
         username: x,
         trains: 40,
         cards: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-        missions: [],
+        missions: [missions.main.pop(), missions.additional.pop(), missions.additional.pop()],
       }))),
       currentPlayer: 0,
+      forcedMove: FORCED_MOVE.DRAW_MISSION,
       cardPile: this.arrayShuffle([
-        ...Array(JOKER_COUNT).fill(0),
-        ...Array(COMMON_CARD_COUNT).fill(1),
-        ...Array(COMMON_CARD_COUNT).fill(2),
-        ...Array(COMMON_CARD_COUNT).fill(3),
-        ...Array(COMMON_CARD_COUNT).fill(4),
-        ...Array(COMMON_CARD_COUNT).fill(5),
-        ...Array(COMMON_CARD_COUNT).fill(6),
-        ...Array(COMMON_CARD_COUNT).fill(7),
-        ...Array(COMMON_CARD_COUNT).fill(8)
+        ...Array(JOKER_COUNT).fill(COLOR.JOKER),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.RED),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.BLUE),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.GREEN),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.YELLOW),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.PURPLE),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.ORANGE),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.WHITE),
+        ...Array(COMMON_CARD_COUNT).fill(COLOR.BLACK)
       ]),
       availableCards: [],
       discardPile: [],
       gameMap: gameMap,
-      missions: this.generateMissions(gameMap),
+      missions: missions,
     }
 
     this.fillAvailableCards(game);
@@ -207,7 +210,7 @@ export class GameService {
     if (savedRoute.owner) 
       throw new ForbiddenException();
 
-    if (savedRoute.color !== route.color && savedRoute.color !== 9) 
+    if (savedRoute.color !== route.color && savedRoute.color !== COLOR.GRAY) 
       throw new ForbiddenException();
 
     if (player.cards[savedRoute.color] + player.cards[0] < savedRoute.length)
@@ -226,6 +229,7 @@ export class GameService {
     if (player.cards[0] < 0)
       throw new ForbiddenException();
 
+    player.trains -= savedRoute.length;
     savedRoute.owner = game.players.findIndex(x => x.username == username);
 
     return (new this.gameModel(game)).save();

@@ -25,6 +25,9 @@ export class Player {
 
   @Prop()
   trains: number;
+
+  @Prop([])
+  availableMissions: any[]
 }
 
 @Schema({ versionKey: false, _id: false })
@@ -43,6 +46,9 @@ export class Game {
 
   @Prop()
   currentPlayer: number;
+
+  @Prop()
+  forcedMove: number;
 
   @Prop()
   cardPile: number[];

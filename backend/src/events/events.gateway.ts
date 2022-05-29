@@ -54,8 +54,8 @@ export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
   }
 
   emitGame(game: Game) {
-    delete game.gameMap;
-    this.server.emit(`game-${game['id']}`, game);
+    const {missions, gameMap, ...gameToEmit} = game;
+    this.server.emit(`game-${game['id']}`, gameToEmit);
   }
 
   emitGameMap(game: Game) {

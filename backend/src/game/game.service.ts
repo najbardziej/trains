@@ -340,7 +340,11 @@ export class GameService {
         
         this.startNextPlayersTurn(game);
       } else {
-        game.forcedMove = FORCED_MOVE.DRAW_CARD;
+        if (game.forcedMove == FORCED_MOVE.NONE) {
+          game.forcedMove = FORCED_MOVE.DRAW_CARD;
+        } else if (game.forcedMove == FORCED_MOVE.DRAW_CARD) {
+          this.startNextPlayersTurn(game);
+        }
       }
     }
     game.players.find(x => x.username == username).cards[newCard]++;

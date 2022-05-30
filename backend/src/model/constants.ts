@@ -14,5 +14,4 @@ export const enum COLOR {
 export const enum FORCED_MOVE {
   NONE = 0,
   DRAW_CARD = 1,
-  DRAW_MISSION = 2,
 }

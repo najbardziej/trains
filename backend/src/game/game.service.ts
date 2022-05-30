@@ -23,6 +23,24 @@ export class GameService {
     }
   }
 
+  private checkIfUserHasChosenMissions(game: Game, username: string) {
+    const player = game.players.find(x => x.username == username);
+    if (player.availableMissions.length > 0) {
+      throw new ForbiddenException("You have to choose missions first.");
+    }
+  }
+
+  private checkIfUserIsCurrentPlayer(game: Game, username: string) {
+    const playerIndex = game.players.findIndex(x => x.username == username);
+    if (playerIndex !== game.currentPlayer) {
+      throw new ForbiddenException("It's not your turn.");
+    }
+  }
+
+  private startNextPlayersTurn(game: Game) {
+    game.currentPlayer = (game.currentPlayer + 1) % game.players.length;
+  }
+
   private arrayShuffle(array: Array<any>) {
     return array
       .map(value => ({ value, sort: Math.random() }))
@@ -121,6 +139,12 @@ export class GameService {
   async drawMissions(id: string, username: string) {
     const game = await this.gameModel.findOne({_id: id});
     this.checkIfUserIsAllowed(game, username);
+    this.checkIfUserHasChosenMissions(game, username); 
+    this.checkIfUserIsCurrentPlayer(game, username);
+
+    if (game.forcedMove == FORCED_MOVE.DRAW_CARD)
+      throw new ForbiddenException("You have to pick another card.");
+
     const player = game.players.find(x => x.username == username);
     
     if (player.availableMissions.length > 0)
@@ -131,6 +155,8 @@ export class GameService {
 
     const missions = game.missions.additional.splice(0, 3);
     player.availableMissions = missions;
+
+    this.startNextPlayersTurn(game);
     return (new this.gameModel(game)).save();
   }
 
@@ -221,7 +247,7 @@ export class GameService {
         availableMissions: [missions.main.shift(), missions.additional.shift(), missions.additional.shift()],
       }))),
       currentPlayer: 0,
-      forcedMove: FORCED_MOVE.DRAW_MISSION,
+      forcedMove: FORCED_MOVE.NONE,
       cardPile: this.arrayShuffle([
         ...Array(JOKER_COUNT).fill(COLOR.JOKER),
         ...Array(COMMON_CARD_COUNT).fill(COLOR.RED),
@@ -247,6 +273,11 @@ export class GameService {
   async buyRoute(id: string, username: string, route: any) {
     const game = await this.gameModel.findOne({ _id: id }).exec();
     this.checkIfUserIsAllowed(game, username);
+    this.checkIfUserHasChosenMissions(game, username);
+    this.checkIfUserIsCurrentPlayer(game, username);
+
+    if (game.forcedMove == FORCED_MOVE.DRAW_CARD)
+      throw new ForbiddenException("You have to pick another card.");
 
     const player = game.players.find(x => x.username == username);
     const savedRoute: any = game.gameMap.edges.find((edge: any) => edge.id == route.id);
@@ -276,12 +307,16 @@ export class GameService {
     player.trains -= savedRoute.length;
     savedRoute.owner = game.players.findIndex(x => x.username == username);
 
+    this.startNextPlayersTurn(game);
     return (new this.gameModel(game)).save();
   }
 
   async drawCard(id: string, username: string, index: number) {
     const game = await this.gameModel.findOne({ _id: id }).exec();
     this.checkIfUserIsAllowed(game, username);
+    this.checkIfUserHasChosenMissions(game, username);
+    this.checkIfUserIsCurrentPlayer(game, username);
+
     if (index > 4 || index < -1) {
       throw new ForbiddenException();
     }
@@ -293,10 +328,21 @@ export class GameService {
     else {
       const replacementCard = game.cardPile.shift();
       newCard = game.availableCards.splice(index, 1, replacementCard)[0];
+      if (newCard == COLOR.JOKER) {
+        if (game.forcedMove == FORCED_MOVE.DRAW_CARD) 
+          throw new ForbiddenException("Joker can be the only picked card.");
+        
+        this.startNextPlayersTurn(game);
+      }
+    }
+    if (game.forcedMove == FORCED_MOVE.DRAW_CARD) {
+      game.forcedMove = FORCED_MOVE.NONE;
+      this.startNextPlayersTurn(game);
+    } else {
+      game.forcedMove = FORCED_MOVE.DRAW_CARD;
     }
     game.players.find(x => x.username == username).cards[newCard]++;
     this.fillAvailableCards(game);
-    game.markModified('players');
     return (new this.gameModel(game)).save();
   }
 }

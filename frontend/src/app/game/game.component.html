@@ -67,6 +67,7 @@
       *ngFor="let player of game.players; let playerIndex = index"
       [player]="player"
       [index]="playerIndex"
+      [active]="playerIndex == game.currentPlayer"
     ></player-info>
   </div>
 

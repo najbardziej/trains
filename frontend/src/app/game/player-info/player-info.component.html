@@ -1,4 +1,4 @@
-<div class="player-box" [attr.data-playercolor]="index">
+<div class="player-box" [attr.data-playercolor]="index" [ngClass]="{'player-box--active': active}">
   <h6>{{ player.username }}</h6>
   <h6>trains: {{ player.trains }} &nbsp;&nbsp; cards: {{ cardCount() }}</h6>
 </div>

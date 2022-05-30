@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription, take } from 'rxjs';
+import { catchError, pipe, Subscription, take, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { COLOR } from '../model/color';
 import { Game } from '../model/game';
@@ -45,22 +45,34 @@ export class GameComponent implements OnInit {
   }
 
   onMissionSelected(missionId: number) {
-    this.gameService.discardMission(this.game.id, missionId).pipe(take(1)).subscribe();
+    this.gameService.discardMission(this.game.id, missionId)
+      .pipe(take(1))
+      .pipe(catchError(err => { this.toastrService.error(err.error.message); return throwError(() => err); }))
+      .subscribe();
   }
 
   onMissionDrawClick() {
-    this.gameService.drawMissions(this.game.id).pipe(take(1)).subscribe();
+    this.gameService.drawMissions(this.game.id)
+      .pipe(take(1))
+      .pipe(catchError(err => { this.toastrService.error(err.error.message); return throwError(() => err); }))
+      .subscribe();
   }
 
   onMissionAcceptClick() {
-    this.gameService.acceptMissions(this.game.id).pipe(take(1)).subscribe();
+    this.gameService.acceptMissions(this.game.id)
+      .pipe(take(1))
+      .pipe(catchError(err => { this.toastrService.error(err.error.message); return throwError(() => err); }))
+      .subscribe();
   }
 
   onColorSelected(color: number) {
     console.log(color, this.selectedRoute);
     if (this.selectedRoute) {
       this.selectedRoute.color = color;
-      this.gameService.buyRoute(this.game.id, this.selectedRoute).pipe(take(1)).subscribe();
+      this.gameService.buyRoute(this.game.id, this.selectedRoute)
+        .pipe(take(1))
+        .pipe(catchError(err => { this.toastrService.error(err.error.message); return throwError(() => err); }))
+        .subscribe();
       this.selectedRoute = null;
     }
   }
@@ -71,12 +83,18 @@ export class GameComponent implements OnInit {
       this.toastrService.info("Select color ->", "", { timeOut: 6000 });
       return;
     }
-    this.gameService.buyRoute(this.game.id, route).pipe(take(1)).subscribe();
+    this.gameService.buyRoute(this.game.id, route)
+      .pipe(take(1))
+      .pipe(catchError(err => { this.toastrService.error(err.error.message); return throwError(() => err); }))
+      .subscribe();
     this.selectedRoute = null;
   }
 
   onCardSelected(card: number) {
-    this.gameService.drawCard(this.game.id, card).pipe(take(1)).subscribe();
+    this.gameService.drawCard(this.game.id, card)
+      .pipe(take(1))
+      .pipe(catchError(err => { this.toastrService.error(err.error.message); return throwError(() => err); }))
+      .subscribe();
   }
 
   ngOnDestroy(): void {

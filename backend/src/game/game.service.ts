@@ -38,6 +38,7 @@ export class GameService {
   }
 
   private startNextPlayersTurn(game: Game) {
+    game.forcedMove = FORCED_MOVE.NONE;
     game.currentPlayer = (game.currentPlayer + 1) % game.players.length;
   }
 
@@ -324,6 +325,11 @@ export class GameService {
     this.reshufflePile(game);
     if (index == -1) {
       newCard = game.cardPile.shift();
+      if (game.forcedMove == FORCED_MOVE.NONE) {
+        game.forcedMove = FORCED_MOVE.DRAW_CARD;
+      } else if (game.forcedMove == FORCED_MOVE.DRAW_CARD) {
+        this.startNextPlayersTurn(game);
+      }
     }
     else {
       const replacementCard = game.cardPile.shift();
@@ -333,13 +339,9 @@ export class GameService {
           throw new ForbiddenException("Joker can be the only picked card.");
         
         this.startNextPlayersTurn(game);
+      } else {
+        game.forcedMove = FORCED_MOVE.DRAW_CARD;
       }
-    }
-    if (game.forcedMove == FORCED_MOVE.DRAW_CARD) {
-      game.forcedMove = FORCED_MOVE.NONE;
-      this.startNextPlayersTurn(game);
-    } else {
-      game.forcedMove = FORCED_MOVE.DRAW_CARD;
     }
     game.players.find(x => x.username == username).cards[newCard]++;
     this.fillAvailableCards(game);

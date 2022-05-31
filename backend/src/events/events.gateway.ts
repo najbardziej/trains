@@ -62,6 +62,10 @@ export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
     this.server.emit(`gamemap-${game['id']}`, game.gameMap);
   }
 
+  emitMessage(game: Game, message: string) {
+    this.server.emit(`message-${game['id']}`, message);
+  }
+
   @SubscribeMessage('identify')
   identify(@MessageBody() data: any, @ConnectedSocket() client: any) {
     /// TODO: secure by receiving accesstoken, verify it and extract username from payload 

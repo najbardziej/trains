@@ -31,7 +31,6 @@ export class GameMapComponent implements OnInit, AfterViewInit {
   private gameMap!: HTMLElement;
   private gameMapOverlay!: HTMLElement;
   private helperNodes: number[] = [];
-  private subscription!: Subscription;
 
   mapData: any = this.route.snapshot.data.gameMap;
 
@@ -40,20 +39,17 @@ export class GameMapComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.gameMapOverlay = document.querySelector('.game-map__overlay') as HTMLElement;
     this.gameMap = document.querySelector('game-map') as HTMLElement;
-
-    this.subscription = this.socketService.getGameMapObservable(this.route.snapshot.paramMap.get('id') || '')
-      .subscribe((gameMapData: any) => {
-        this.mapData = gameMapData;
-        console.log(gameMapData);
-        this.removeMapElements();
-        this.createMapElements();
-    });
-
     this.createMapElements();
   }
 
   ngAfterViewInit(): void {
     this.rescaleMap();
+  }
+
+  updateMap(gameMapData: any) {
+    this.mapData = gameMapData;
+    this.removeMapElements();
+    this.createMapElements();
   }
 
   removeMapElements() {

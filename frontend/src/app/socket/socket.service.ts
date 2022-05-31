@@ -11,10 +11,6 @@ export class SocketService {
 
   constructor(private socket: Socket) { }
 
-  leaveAllRooms() {
-    
-  }
-
   identify(username: string) {
     this.socket.emit("identify", { username })
   }
@@ -33,5 +29,9 @@ export class SocketService {
 
   getGameRoomsObservable(): Observable<any> {
     return this.socket.fromEvent("lobby");
+  }
+
+  getMessageObservable(gameId: string): Observable<any> {
+    return this.socket.fromEvent(`message-${gameId}`);
   }
 }

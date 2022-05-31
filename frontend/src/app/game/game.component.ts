@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, pipe, Subscription, take, throwError } from 'rxjs';
@@ -6,6 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { COLOR } from '../model/color';
 import { Game } from '../model/game';
 import { SocketService } from '../socket/socket.service';
+import { GameMapComponent } from './game-map/game-map.component';
 import { GameService } from './game.service';
 
 @Component({
@@ -23,10 +24,14 @@ export class GameComponent implements OnInit {
     private readonly toastrService: ToastrService,
   ) { }
 
-  private selectedRoute: any = null;
-  private subscription!: Subscription;
+  @ViewChild(GameMapComponent) gameMapComponent!: GameMapComponent;
 
-  game: Game = this.route.snapshot.data.game;
+  private gameSubscription!: Subscription;
+  private mapSubscription!: Subscription;
+  private messageSubscription!: Subscription;
+  
+  private game: Game = this.route.snapshot.data.game;
+  private selectedRoute: any = null;
 
   get player() {
     return this.game.players.find((p: any) => p.username === this.authService.getUsername());
@@ -37,10 +42,19 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.subscription = this.socketService.getGameObservable(this.game.id)
+    this.gameSubscription = this.socketService.getGameObservable(this.game.id)
       .subscribe((game: Game) => {
         this.game = game;
-        console.log(game);
+    });
+
+    this.mapSubscription = this.socketService.getGameMapObservable(this.game.id)
+      .subscribe((gameMapData: any) => {
+        this.gameMapComponent.updateMap(gameMapData);
+    });
+
+    this.messageSubscription = this.socketService.getMessageObservable(this.game.id)
+      .subscribe((message: any) => {
+        this.toastrService.info(message);
     });
   }
 
@@ -80,7 +94,7 @@ export class GameComponent implements OnInit {
   onRouteSelected(route: any) {
     if (route.color == COLOR.GRAY) {
       this.selectedRoute = route;
-      this.toastrService.info("Select color ->", "", { timeOut: 6000 });
+      this.toastrService.info("Select color ->");
       return;
     }
     this.gameService.buyRoute(this.game.id, route)
@@ -98,6 +112,8 @@ export class GameComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.gameSubscription.unsubscribe();
+    this.mapSubscription.unsubscribe();
+    this.messageSubscription.unsubscribe();
   }
 }

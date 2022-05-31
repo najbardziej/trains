@@ -5,7 +5,7 @@ import { Game, GameMap, GameDocument, Missions } from 'src/schemas/game.schema';
 import * as Graph from 'node-dijkstra';
 
 import * as gameMapFile from './game-map.json';
-import { COLOR, FORCED_MOVE } from 'src/model/constants';
+import { COLOR, FORCED_MOVE, POINTS_FOR_LENGTH } from 'src/model/constants';
 
 @Injectable()
 export class GameService {
@@ -243,6 +243,7 @@ export class GameService {
       players: this.arrayShuffle(players.map(x => ({ 
         username: x,
         trains: 40,
+        points: 0,
         cards: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
         missions: [],
         availableMissions: [missions.main.shift(), missions.additional.shift(), missions.additional.shift()],
@@ -305,6 +306,10 @@ export class GameService {
     if (player.cards[0] < 0)
       throw new ForbiddenException();
 
+    if (player.trains < 0)
+      throw new ForbiddenException("You don't have enough trains.");
+
+    player.points += POINTS_FOR_LENGTH[savedRoute.length];
     player.trains -= savedRoute.length;
     savedRoute.owner = game.players.findIndex(x => x.username == username);
 

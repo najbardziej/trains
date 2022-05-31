@@ -14,6 +14,7 @@ export class PlayerInfoComponent implements OnInit {
   @Input() active: boolean = false;
 
   cardCount = () => this.player.cards.reduce((x: number, y: number) => x + y);
+  missionCount = () => this.player.missions.length;
 
   ngOnInit(): void {
   }

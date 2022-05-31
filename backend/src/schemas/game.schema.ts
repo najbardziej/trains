@@ -31,6 +31,9 @@ export class Player {
 
   @Prop([])
   missions: any[];
+
+  @Prop()
+  points: number;
 }
 
 @Schema({ versionKey: false, _id: false })

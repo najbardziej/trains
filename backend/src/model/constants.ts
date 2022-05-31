@@ -15,3 +15,15 @@ export const enum FORCED_MOVE {
   NONE = 0,
   DRAW_CARD = 1,
 }
+
+export const POINTS_FOR_LENGTH = [
+  0,
+  1,
+  2,
+  4,
+  7,
+  10,
+  14,
+  18,
+  22,
+]

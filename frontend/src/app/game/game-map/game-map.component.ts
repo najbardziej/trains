@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { contain } from 'intrinsic-scale';
 import { Subscription } from 'rxjs';
@@ -21,33 +21,36 @@ const EDGE_CREATION_MODE = false;
   templateUrl: './game-map.component.html',
   styleUrls: ['./game-map.component.scss']
 })
-export class GameMapComponent implements OnInit, AfterViewInit {
+export class GameMapComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly socketService: SocketService,
   ) { }
 
-  private gameMap!: HTMLElement;
+  private gameMapElement!: HTMLElement;
   private gameMapOverlay!: HTMLElement;
   private helperNodes: number[] = [];
 
-  mapData: any = this.route.snapshot.data.gameMap;
-
+  @Input() gameMap: any;
   @Output() routeSelected: EventEmitter<number> = new EventEmitter();
 
   ngOnInit(): void {
     this.gameMapOverlay = document.querySelector('.game-map__overlay') as HTMLElement;
-    this.gameMap = document.querySelector('game-map') as HTMLElement;
+    this.gameMapElement = document.querySelector('game-map') as HTMLElement;
     this.createMapElements();
   }
 
   ngAfterViewInit(): void {
     this.rescaleMap();
+  }  
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.gameMap) {
+      this.updateMap();
+    }
   }
 
-  updateMap(gameMapData: any) {
-    this.mapData = gameMapData;
+  updateMap() {
     this.removeMapElements();
     this.createMapElements();
   }
@@ -59,17 +62,17 @@ export class GameMapComponent implements OnInit, AfterViewInit {
 
   createMapElements() {
     // Create node elements
-    this.mapData.nodes.forEach((node: any) => {
+    this.gameMap.nodes.forEach((node: any) => {
       this.gameMapOverlay.appendChild(
         this.createNode(node.x, node.y, node.id, node.name)
       );
     });
     // Create train elements
-    this.mapData.edges.forEach((edge: any) => {
+    this.gameMap.edges.forEach((edge: any) => {
       // get start and end nodes
       let [start, end] = [
-        this.mapData.nodes.filter((node: any) => node.id === edge.nodes[0])[0],
-        this.mapData.nodes.filter((node: any) => node.id === edge.nodes[1])[0]
+        this.gameMap.nodes.filter((node: any) => node.id === edge.nodes[0])[0],
+        this.gameMap.nodes.filter((node: any) => node.id === edge.nodes[1])[0]
       ];
       // Move line to center
       let [startX, endX] = [start.x - NODE_RADIUS, end.x - NODE_RADIUS];
@@ -147,8 +150,8 @@ export class GameMapComponent implements OnInit, AfterViewInit {
         }
         
         let [start, end] = [
-          this.mapData.nodes.filter((node: any) => node.id === this.helperNodes[0])[0],
-          this.mapData.nodes.filter((node: any) => node.id === this.helperNodes[1])[0]
+          this.gameMap.nodes.filter((node: any) => node.id === this.helperNodes[0])[0],
+          this.gameMap.nodes.filter((node: any) => node.id === this.helperNodes[1])[0]
         ];        
         
         let length = Math.hypot(start.x - end.x, start.y - end.y);
@@ -186,8 +189,8 @@ export class GameMapComponent implements OnInit, AfterViewInit {
   }
 
   rescaleMap() {
-    const gameMapWidth = this.gameMap.getBoundingClientRect().width;
-    const gameMapHeight = this.gameMap.getBoundingClientRect().height;
+    const gameMapWidth = this.gameMapElement.getBoundingClientRect().width;
+    const gameMapHeight = this.gameMapElement.getBoundingClientRect().height;
     let { width, height, x, y } = contain(gameMapWidth, gameMapHeight, MAP_WIDTH, MAP_HEIGHT);
     const scale = width / MAP_WIDTH;
     this.gameMapOverlay.style.transform = `scale(${scale})`;

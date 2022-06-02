@@ -17,6 +17,7 @@
 
   <game-map
     (routeSelected)="onRouteSelected($any($event))"
+    [gameMap]="gameMap"
   ></game-map>
 
   <div class="mission-picker">
@@ -31,6 +32,8 @@
       *ngFor="let mission of player.availableMissions"
       [mission]="mission"
       [active]="false"
+      [gameMap]="gameMap"
+      [playerIndex]="playerIndex"
       (missionSelected)="onMissionSelected($any($event))"
     ></player-mission>
     <button
@@ -47,6 +50,8 @@
       <player-mission
       *ngFor="let mission of player.missions"
       [mission]="mission"
+      [gameMap]="gameMap"
+      [playerIndex]="playerIndex"
       [active]="true"
     ></player-mission>
     </div>

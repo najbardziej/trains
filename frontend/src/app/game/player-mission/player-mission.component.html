@@ -1,10 +1,22 @@
-<div class="mission" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()">
-  <span class="mission__route">{{ caption }}</span>
-  <div style="flex-grow: 1;"></div>
-  <span class="mission__points">{{ mission.points }}</span>
-  <button 
-    *ngIf="!active"
-    class="btn btn-warning btn-sm" 
-    (click)="onClick($event)"
-    >Discard</button>
+<div class="mission" 
+  (mouseover)="onMouseOver()" 
+  (mouseout)="onMouseOut()"
+  [ngClass]="{'mission--impossible': !isPossible, 'mission--finished': isFinished }"
+  >
+
+  <div class="mission__wrapper">
+    <span class="mission__route">{{ caption }}</span>
+    <div style="flex-grow: 1;"></div>
+    <span class="mission__points">{{ mission.points }}</span>
+    <button 
+      *ngIf="!active"
+      class="btn btn-warning btn-sm" 
+      (click)="onClick()"
+      >Discard</button>
+  </div>
+  <div 
+    class="mission__progressbar" 
+    [ngStyle]="{'width': progress }"
+    ></div>
+
 </div>

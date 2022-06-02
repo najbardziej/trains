@@ -30,13 +30,19 @@ export class GameComponent implements OnInit {
   private mapSubscription!: Subscription;
   private messageSubscription!: Subscription;
   
-  private game: Game = this.route.snapshot.data.game;
   private selectedRoute: any = null;
+
+  game: Game = this.route.snapshot.data.game;
+  gameMap: any = this.route.snapshot.data.gameMap
 
   get player() {
     return this.game.players.find((p: any) => p.username === this.authService.getUsername());
   }
 
+  get playerIndex() {
+    return this.game.players.findIndex((p: any) => p.username === this.authService.getUsername());
+  }
+  
   get playerCards() {
     return Array.from(this.player.cards.entries()).map(([i, x]: any) => ({ card: i, quantity: x }))
   }
@@ -49,7 +55,7 @@ export class GameComponent implements OnInit {
 
     this.mapSubscription = this.socketService.getGameMapObservable(this.game.id)
       .subscribe((gameMapData: any) => {
-        this.gameMapComponent.updateMap(gameMapData);
+        this.gameMap = gameMapData;
     });
 
     this.messageSubscription = this.socketService.getMessageObservable(this.game.id)

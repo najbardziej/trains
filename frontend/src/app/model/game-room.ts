@@ -1,5 +1,5 @@
 export interface GameRoom {
-    id: string,
-    roomName: string,
-    players: string[],
+  id: string,
+  roomName: string,
+  players: string[],
 }

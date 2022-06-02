@@ -86,10 +86,10 @@ export class GameService {
     gameMap.nodes.forEach((node) => {
       graph[node.id] = {}
       gameMap.edges.forEach(edge =>{
-          if (edge.nodes.some(n => n == node.id)) {
-              let otherId = edge.nodes.filter(x => x != node.id)[0]
-              graph[node.id][otherId] = edge.length;
-          }
+        if (edge.nodes.some(n => n == node.id)) {
+          let otherId = edge.nodes.find(x => x != node.id)
+          graph[node.id][otherId] = edge.length;
+        }
       })
     })
 
@@ -306,11 +306,12 @@ export class GameService {
     if (player.cards[0] < 0)
       throw new ForbiddenException();
 
+    player.points += POINTS_FOR_LENGTH[savedRoute.length];
+    player.trains -= savedRoute.length;
+
     if (player.trains < 0)
       throw new ForbiddenException("You don't have enough trains.");
 
-    player.points += POINTS_FOR_LENGTH[savedRoute.length];
-    player.trains -= savedRoute.length;
     savedRoute.owner = game.players.findIndex(x => x.username == username);
 
     this.startNextPlayersTurn(game);

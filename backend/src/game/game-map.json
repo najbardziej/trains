@@ -177,6 +177,8 @@
     {"id":102,"nodes":[35,34],"length":3},
     {"id":103,"nodes":[29,24],"length":3},
     {"id":104,"nodes":[20,27],"length":6},
-    {"id":105,"nodes":[32,26],"length":7}
+    {"id":105,"nodes":[32,26],"length":7},
+    {"id":106,"nodes":[10,1],"length":3},
+    {"id":107,"nodes":[6,22],"length":4}
   ]
 }

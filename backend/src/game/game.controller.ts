@@ -2,7 +2,6 @@ import { Body, Controller, ForbiddenException, Delete, Get, Param, Post, Put, Re
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { EventsGateway } from 'src/events/events.gateway';
-import { FORCED_MOVE } from 'src/model/constants';
 import { Game } from 'src/schemas/game.schema';
 import { GameService } from './game.service';
 
@@ -34,8 +33,7 @@ export class GameController {
 
     const game = await this.gameService.getGame(id, req.user.username);
     this.eventsGateway.emitGame(game);
-    if (game.forcedMove == FORCED_MOVE.NONE)
-      this.eventsGateway.emitMessage(game, `${game.players[game.currentPlayer].username}'s turn started`);
+    this.eventsGateway.emitEndTurnMessages(game);
   }
 
   @Put('/:id/buy-route')
@@ -45,7 +43,7 @@ export class GameController {
     const game = await this.gameService.getGame(id, req.user.username);
     this.eventsGateway.emitGame(game);
     this.eventsGateway.emitGameMap(game);
-    this.eventsGateway.emitMessage(game, `${game.players[game.currentPlayer].username}'s turn started`);
+    this.eventsGateway.emitEndTurnMessages(game);
   }
 
   @Put('/:id/draw-missions')
@@ -55,7 +53,7 @@ export class GameController {
     // TODO: Return anonymized game object instead of emitting whole game
     const game = await this.gameService.getGame(id, req.user.username);
     this.eventsGateway.emitGame(game);
-    this.eventsGateway.emitMessage(game, `${game.players[game.currentPlayer].username}'s turn started`);
+    this.eventsGateway.emitEndTurnMessages(game);
   }
 
   @Put('/:id/discard-mission/:missionId')

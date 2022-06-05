@@ -70,6 +70,9 @@ export class Game {
 
   @Prop(Missions)
   missions: Missions;
+
+  @Prop()
+  remainingTurns: number;
 };
 
 export const GameSchema = SchemaFactory.createForClass(Game);

@@ -16,10 +16,10 @@ export class GameService {
 
   private checkIfUserIsAllowed(game: Game, username: string) {
     if (!game) {
-      throw new ForbiddenException();
+      throw new ForbiddenException("Game not found.");
     }
     if (!game.players.find(x => x.username == username)) {
-      throw new ForbiddenException();
+      throw new ForbiddenException("Invalid player.");
     }
   }
 
@@ -35,11 +35,23 @@ export class GameService {
     if (playerIndex !== game.currentPlayer) {
       throw new ForbiddenException("It's not your turn.");
     }
+    if (game.remainingTurns == 0) {
+      throw new ForbiddenException("Game has concluded.");
+    }
   }
 
   private startNextPlayersTurn(game: Game) {
     game.forcedMove = FORCED_MOVE.NONE;
     game.currentPlayer = (game.currentPlayer + 1) % game.players.length;
+
+    if (game.players.some(x => x.trains <= 2)) {
+      if (game.remainingTurns == -1){
+        game.remainingTurns = game.players.length;
+      }
+      else {
+        game.remainingTurns--;
+      }
+    }
   }
 
   private arrayShuffle(array: Array<any>) {
@@ -240,11 +252,11 @@ export class GameService {
     const gameMap = this.createGameMap();
     const missions = this.generateMissions(gameMap);
     const game: Game = {
-      players: this.arrayShuffle(players.map(x => ({ 
+      players: this.arrayShuffle(players.map(x => ({
         username: x,
         trains: 40,
         points: 0,
-        cards: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        cards: [0, 0, 0, 0, 0, 0, 0, 0, 0],
         missions: [],
         availableMissions: [missions.main.shift(), missions.additional.shift(), missions.additional.shift()],
       }))),
@@ -265,6 +277,7 @@ export class GameService {
       discardPile: [],
       gameMap: gameMap,
       missions: missions,
+      remainingTurns: -1,
     }
 
     this.fillAvailableCards(game);

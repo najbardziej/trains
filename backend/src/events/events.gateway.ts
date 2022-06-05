@@ -11,6 +11,7 @@ import { LobbyService } from 'src/lobby/lobby.service';
 import { Injectable } from '@nestjs/common';
 import { GameRoom } from 'src/schemas/game-room.schema';
 import { Game } from 'src/schemas/game.schema';
+import { FORCED_MOVE } from 'src/model/constants';
 
 @WebSocketGateway({
   cors: {
@@ -18,7 +19,7 @@ import { Game } from 'src/schemas/game.schema';
   },
 })//TODO: secure it
 @Injectable()
-export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
+export class EventsGateway implements OnGatewayDisconnect {
 
   @WebSocketServer()
   server: Server;
@@ -54,7 +55,7 @@ export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
   }
 
   emitGame(game: Game) {
-    const {gameMap, ...gameToEmit} = game; // TODO: remove missions
+    const {gameMap, missions, cardPile, discardPile, ...gameToEmit} = game;
     this.server.emit(`game-${game['id']}`, gameToEmit);
   }
 
@@ -64,6 +65,26 @@ export class EventsGateway implements OnGatewayDisconnect { //OnModuleInit,
 
   emitMessage(game: Game, message: string) {
     this.server.emit(`message-${game['id']}`, message);
+  }
+
+  emitEndTurnMessages(game: Game) {
+    if (game.forcedMove != FORCED_MOVE.NONE)
+      return;
+
+    if (game.remainingTurns == game.players.length) {
+      const player = game.players.find(player => player.trains <= 2);
+      this.emitMessage(
+        game, `${player.username} has only ${player.trains} left. Everyone has one more move till the game ends.`);
+    }
+    else if (game.remainingTurns > 0) {
+      this.emitMessage(game, `${game.remainingTurns} turns left till the game ends.`);
+    }
+    else if (game.remainingTurns == 0) {
+      this.emitMessage(game, `Game has concluded.`);
+      return;
+    }
+    
+    this.emitMessage(game, `${game.players[game.currentPlayer].username}'s turn started`)
   }
 
   @SubscribeMessage('identify')

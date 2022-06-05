@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { contain } from 'intrinsic-scale';
-import { Subscription } from 'rxjs';
-import { SocketService } from 'src/app/socket/socket.service';
+import { Subject } from 'rxjs';
 
 const MAP_HEIGHT = 921.633;
 const MAP_WIDTH = 1408;
@@ -21,15 +20,15 @@ const EDGE_CREATION_MODE = false;
   templateUrl: './game-map.component.html',
   styleUrls: ['./game-map.component.scss']
 })
-export class GameMapComponent implements OnInit, AfterViewInit, OnChanges {
+export class GameMapComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
 
-  constructor(
-    private readonly route: ActivatedRoute,
-  ) { }
+  constructor() { }
 
   private gameMapElement!: HTMLElement;
   private gameMapOverlay!: HTMLElement;
   private helperNodes: number[] = [];
+  
+  private onChanges = new Subject<SimpleChanges>();
 
   @Input() gameMap: any;
   @Output() routeSelected: EventEmitter<number> = new EventEmitter();
@@ -38,17 +37,24 @@ export class GameMapComponent implements OnInit, AfterViewInit, OnChanges {
     this.gameMapOverlay = document.querySelector('.game-map__overlay') as HTMLElement;
     this.gameMapElement = document.querySelector('game-map') as HTMLElement;
     this.createMapElements();
+    this.onChanges.subscribe((changes: SimpleChanges) => {
+      if (changes.gameMap) {
+        this.updateMap();
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.onChanges.unsubscribe();
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    this.onChanges.next(changes);
   }
 
   ngAfterViewInit(): void {
     this.rescaleMap();
   }  
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.gameMap) {
-      this.updateMap();
-    }
-  }
 
   updateMap() {
     this.removeMapElements();

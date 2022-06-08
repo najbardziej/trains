@@ -15,7 +15,14 @@ import { GameMapResolver } from './game-map/game-map.resolver';
 import { PlayerMissionComponent } from './player-mission/player-mission.component';
 
 @NgModule({
-  declarations: [GameComponent, GameCardComponent, PlayerCardComponent, GameMapComponent, PlayerInfoComponent, PlayerMissionComponent],
+  declarations: [
+    GameComponent,
+    GameCardComponent,
+    PlayerCardComponent,
+    GameMapComponent,
+    PlayerInfoComponent,
+    PlayerMissionComponent
+  ],
   imports: [
     CommonModule,
     AuthModule,

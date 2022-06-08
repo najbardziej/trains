@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   templateUrl: './game-card.component.html',
   styleUrls: ['./game-card.component.scss']
 })
-export class GameCardComponent implements OnInit {
+export class GameCardComponent {
 
   constructor() { }
 
@@ -14,10 +14,7 @@ export class GameCardComponent implements OnInit {
 
   @Output() cardSelected: EventEmitter<number> = new EventEmitter();
 
-  ngOnInit(): void { }
-
   selectCard(): void {
     this.cardSelected.emit(this.index);
   }
-
 }

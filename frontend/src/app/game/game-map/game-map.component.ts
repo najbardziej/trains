@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { contain } from 'intrinsic-scale';
 import { Subject } from 'rxjs';
+import { GameMap } from 'src/app/model/game-map';
 
 const MAP_HEIGHT = 921.633;
 const MAP_WIDTH = 1408;
@@ -30,7 +30,7 @@ export class GameMapComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
   
   private onChanges = new Subject<SimpleChanges>();
 
-  @Input() gameMap: any;
+  @Input() gameMap: GameMap = { edges: [], nodes: [] };
   @Output() routeSelected: EventEmitter<number> = new EventEmitter();
 
   ngOnInit(): void {
@@ -195,8 +195,8 @@ export class GameMapComponent implements OnInit, OnDestroy, AfterViewInit, OnCha
   }
 
   rescaleMap() {
-    const gameMapWidth = this.gameMapElement.getBoundingClientRect().width;
-    const gameMapHeight = this.gameMapElement.getBoundingClientRect().height;
+    const gameMapWidth = this.gameMapElement?.getBoundingClientRect().width || 0;
+    const gameMapHeight = this.gameMapElement?.getBoundingClientRect().height || 0;
     let { width, height, x, y } = contain(gameMapWidth, gameMapHeight, MAP_WIDTH, MAP_HEIGHT);
     const scale = width / MAP_WIDTH;
     this.gameMapOverlay.style.transform = `scale(${scale})`;

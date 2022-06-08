@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import Graph from 'node-dijkstra';
+import { GameMap } from 'src/app/model/game-map';
+import { Mission } from 'src/app/model/mission';
 
 const ALMOST_ZERO = 1e-20; // Hack for external lib not allowing 0 as graph edge length
 
@@ -8,36 +10,34 @@ const ALMOST_ZERO = 1e-20; // Hack for external lib not allowing 0 as graph edge
   templateUrl: './player-mission.component.html',
   styleUrls: ['./player-mission.component.scss']
 })
-export class PlayerMissionComponent implements OnInit, OnDestroy {
+export class PlayerMissionComponent implements OnDestroy {
 
   constructor() { }
 
-  @Input() mission: any;
-  @Input() gameMap: any;
-  @Input() playerIndex: any;
+  @Input() mission: Mission = { id: -1, nodes: [ -1, -1 ], points: 0 };
+  @Input() gameMap: GameMap = { edges: [], nodes: [] };
+  @Input() playerIndex: number = -1;
   @Input() active: boolean = false;
   @Output() missionSelected: EventEmitter<number> = new EventEmitter();
-
-  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.removeHighlighting();
   }
 
   private addHighlighting = () => this.mission.nodes.forEach((node: any) => {
-    this.getNode(node).classList.add("node--highlighted");
+    this.getNode(node)?.classList.add("node--highlighted");
   });
 
   private removeHighlighting = () => this.mission.nodes.forEach((node: any) => {
-    this.getNode(node).classList.remove("node--highlighted");
+    this.getNode(node)?.classList.remove("node--highlighted");
   });
 
   onMouseOver = () => this.addHighlighting();
   onMouseOut = () => this.removeHighlighting();
   onClick = () => this.missionSelected.emit(this.mission.id);
 
-  getNode = (nodeId: number) => document.querySelector(`.node[data-id='${nodeId}']`)!;
-  getNodeName = (nodeId: number): string => this.getNode(nodeId).textContent || "";
+  getNode = (nodeId: number) => document.querySelector(`.node[data-id='${nodeId}']`) || null;
+  getNodeName = (nodeId: number): string => this.getNode(nodeId)?.textContent || "";
   
   get isPossible() : boolean {
     const [fullPathCost, remainingPathCost] = this.pathCost;

@@ -5,6 +5,8 @@ import { catchError, pipe, Subscription, take, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { COLOR } from '../model/color';
 import { Game } from '../model/game';
+import { GameMap } from '../model/game-map';
+import { Player } from '../model/player';
 import { SocketService } from '../socket/socket.service';
 import { GameMapComponent } from './game-map/game-map.component';
 import { GameService } from './game.service';
@@ -33,14 +35,14 @@ export class GameComponent implements OnInit {
   private selectedRoute: any = null;
 
   game: Game = this.route.snapshot.data.game;
-  gameMap: any = this.route.snapshot.data.gameMap
+  gameMap: GameMap = this.route.snapshot.data.gameMap;
 
   get player() {
-    return this.game.players.find((p: any) => p.username === this.authService.getUsername());
+    return this.game.players.find((p: Player) => p.username === this.authService.getUsername());
   }
 
   get playerIndex() {
-    return this.game.players.findIndex((p: any) => p.username === this.authService.getUsername());
+    return this.game.players.findIndex((p: Player) => p.username === this.authService.getUsername());
   }
   
   get playerCards() {

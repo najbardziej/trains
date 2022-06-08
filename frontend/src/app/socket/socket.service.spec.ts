@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
+import { SocketIoModule } from 'ngx-socket-io';
 
 import { SocketService } from './socket.service';
 
-describe('SocketServiceService', () => {
+describe('SocketService', () => {
   let service: SocketService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [ SocketIoModule.forRoot({ url: "", options: {}}) ]
+    });
     service = TestBed.inject(SocketService);
   });
 

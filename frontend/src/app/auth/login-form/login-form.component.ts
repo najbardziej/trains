@@ -53,7 +53,7 @@ export class LoginFormComponent implements OnInit {
       email:           ['', [Validators.required, Validators.email]],
       password:        ['', [Validators.required, Validators.minLength(8)]],
       repeatPassword:  ['', [Validators.required, Validators.minLength(8)]],
-      agreeToTerms:    [false]
+      // agreeToTerms:    [false]
     }, {
       validator: MustMatch('password', 'repeatPassword')
     });
@@ -68,10 +68,10 @@ export class LoginFormComponent implements OnInit {
     if (!form.valid) {
       return 'Please fix validation errors';
     }
-    if (form == this.registerForm){
-      if (!this.registerForm.get('agreeToTerms')?.value)
-        return 'You have to agree to the terms';
-    }
+    // if (form == this.registerForm){
+    //   if (!this.registerForm.get('agreeToTerms')?.value)
+    //     return 'You have to agree to the terms';
+    // }
     return '';
   }
 
@@ -97,7 +97,7 @@ export class LoginFormComponent implements OnInit {
       return;
     }
     
-    const {repeatPassword, agreeToTerms, ...user} = this.registerForm.value;
+    const {repeatPassword, ...user} = this.registerForm.value; // ,agreeToTerms
 
     this.authService.register(user)
       .subscribe({

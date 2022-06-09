@@ -70,7 +70,7 @@ export class PlayerMissionComponent implements OnDestroy {
           let otherId = edge.nodes.find((x: any) => x != node.id)
           if (edge.owner == this.playerIndex) {
             graph[node.id][otherId] = ALMOST_ZERO;
-          } else if (!edge.owner) {
+          } else if (!edge.owner && edge.owner !== 0) {
             graph[node.id][otherId] = edge.length;
           }
         }

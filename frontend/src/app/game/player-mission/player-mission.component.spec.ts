@@ -16,7 +16,7 @@ describe('PlayerMissionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PlayerMissionComponent);
     component = fixture.componentInstance;
-    component.playerIndex = 0;
+    component.playerIndex = 1;
     component.gameMap = {
       nodes: [
         {"id":0,"name":"Warszawa","x":1082,"y":407},
@@ -53,9 +53,9 @@ describe('PlayerMissionComponent', () => {
     });
 
     it('if some edges are bought', () => {
-      component.gameMap.edges.find(e => e.id == 97).owner = 0;
-      component.gameMap.edges.find(e => e.id == 7).owner = 0;
-      component.gameMap.edges.find(e => e.id == 11).owner = 0;
+      component.gameMap.edges.find(e => e.id == 97).owner = 1;
+      component.gameMap.edges.find(e => e.id == 7).owner = 1;
+      component.gameMap.edges.find(e => e.id == 11).owner = 1;
 
       expect(component.isFinished).toBeFalse();
       expect(component.isPossible).toBeTrue();
@@ -64,8 +64,8 @@ describe('PlayerMissionComponent', () => {
     });
 
     it('if there is obstacle on shortest path', () => {
-      component.gameMap.edges.find(e => e.id == 0).owner = 1;
-      component.gameMap.edges.find(e => e.id == 2).owner = 0;
+      component.gameMap.edges.find(e => e.id == 0).owner = 0;
+      component.gameMap.edges.find(e => e.id == 2).owner = 1;
 
       expect(component.isFinished).toBeFalse();
       expect(component.isPossible).toBeTrue();
@@ -74,7 +74,7 @@ describe('PlayerMissionComponent', () => {
     });
 
     it('if is not possible', () => {
-      component.gameMap.edges.find(e => e.id == 2).owner = 1;
+      component.gameMap.edges.find(e => e.id == 2).owner = 0;
       expect(component.isFinished).toBeFalse();
       expect(component.isPossible).toBeFalse();
       expect(component.pathCost).toEqual([0, 0]);

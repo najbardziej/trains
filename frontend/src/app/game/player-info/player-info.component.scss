@@ -19,3 +19,14 @@
     color: white;
   }
 }
+
+@media (min-resolution: 144dpi) {
+  .player-box  {
+    padding: 2px 5px 0;
+
+    h6 {
+      font-size: 0.7rem;
+      margin-bottom: 0;
+    }
+  }
+}

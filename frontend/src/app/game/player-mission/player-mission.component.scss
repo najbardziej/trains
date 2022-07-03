@@ -47,3 +47,18 @@
     color: #388E3C;
   }
 }
+
+@media (min-resolution: 144dpi) {
+  .mission {
+    font-size: 0.75rem;
+    margin: 0 5px 10px;
+
+    &__wrapper {
+      padding: 5px 5px 1px;
+    }
+
+    .btn {
+      padding: 0.1rem;
+    }
+  }
+}

@@ -21,3 +21,11 @@
     }
   }
 }
+
+@media (min-resolution: 144dpi) {
+  .player-card {
+    .game-card {
+      margin: 0px 2px 4px 4px;
+    }
+  }
+}

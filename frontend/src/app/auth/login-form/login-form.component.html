@@ -1,6 +1,6 @@
 <div class="mask d-flex align-items-center h-100 gradient-custom">
   <div class="container">
-    <div *ngIf="document.location.origin.includes('azure'); then thenBlock else elseBlock"></div>
+    <div *ngIf="isAzure; then thenBlock else elseBlock"></div>
     <ng-template #thenBlock>
       <h1>Migrated to <a href="https://trains.najbardziej.net/">https://trains.najbardziej.net/</a></h1>
     </ng-template>

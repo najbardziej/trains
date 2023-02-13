@@ -58,6 +58,10 @@ export class LoginFormComponent implements OnInit {
       validator: MustMatch('password', 'repeatPassword')
     });
   }
+  
+  get isAzure() {
+    return document.location.origin.includes('azure');
+  }
 
   checkFormCompletion(form: FormGroup): string {
     for (const control of Object.values(form.controls)) {
